@@ -42,23 +42,26 @@ function Channel(props: ChannelProps) {
     const [volume, setVolume] = useState(100);
 
     return (<div className="channel">
-        <input
-            type="checkbox"
-            checked={muted}
-            onChange={e => {
-                const muted = e.target.checked;
-                console.log(`Setting mute of ${props.name} to ${muted}`);
-                setMuted(muted);
-                props.audio.muted = muted;
-            }}
-        >
-        </input>
-        <input type="range" value={volume} onChange={(e) => { 
-            const vol = Number(e.target.value);
-            setVolume(vol);
-            props.audio.volume = vol / 100;
-            console.log(vol, props.audio.volume)
-        }}></input>
+        <div>
+            MUTE
+            <input
+                type="checkbox"
+                checked={muted}
+                onChange={e => {
+                    const muted = e.target.checked;
+                    setMuted(muted);
+                    props.audio.muted = muted;
+                }}
+            >
+            </input>
+        </div>
+        <div className="fader">
+            <input type="range" value={volume} onChange={(e) => { 
+                const vol = Number(e.target.value);
+                setVolume(vol);
+                props.audio.volume = vol / 100;
+            }}></input>
+        </div>
         <span>{props.name}</span>
     </div>);
 }

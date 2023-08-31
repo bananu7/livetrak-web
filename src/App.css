@@ -50,18 +50,58 @@
   gap: '5px';
   width: 900px;
   height: 500px;
-  background-color: #333;
+  background-color: #444;
 }
 
 .channel {
+  display: flex;
+  flex-direction: column;
   padding: 5px;
-  position: relative;
+  gap: 20px;
+
   border: 1px solid #111;
   width: 100px;
   height: 450px;
+
+  /*overflow: hidden;*/
+}
+
+.channel .fader {
+  height: 300px;
+  width: 60px;
+  background-color: #444;
 }
 
 .channel input[type=range] {
-  -webkit-appearance: slider-vertical;
-  height: 300px;
+  display: block;
+  appearance: none;
+  transform: rotateZ(270deg);
+  transform-origin: center center;
+  margin-top: 120px;
+  margin-left: -120px;
+  margin-right: 0;
+  width: 300px;
+  height: 60px;
+  
+  background: transparent;
+  cursor: pointer;
+}
+
+.channel input[type="range"]::-webkit-slider-runnable-track {
+  background-color: black;
+  border-radius: 0.5rem;
+  height: 0.5rem;  
+}
+
+.channel input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+
+  /*custom styles*/
+  background-color: #ccc;
+  border: 1px solid black;
+  filter: drop-shadow(-5px 5px 4px #222);
+  height: 40px;
+  width: 80px;
+  margin-top: -17px;
 }
