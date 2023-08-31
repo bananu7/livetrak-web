@@ -2,8 +2,14 @@
 FROM node:18
 
 WORKDIR /var/lib/app
-COPY package.json ./
-COPY package-lock.json ./
+COPY ./package.json ./
+COPY ./package-lock.json ./
+COPY ./tsconfig.json ./
+COPY ./vite.config.ts ./
+
+COPY ./index.html ./
+COPY ./src ./
+
 RUN npm ci
 RUN npm run build
 
