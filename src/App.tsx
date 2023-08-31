@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 import { getToken } from './filebrowser'
@@ -8,7 +6,7 @@ import { getToken } from './filebrowser'
 import { TimingObject } from 'timing-object';
 import { setTimingsrc } from 'timingsrc';
 
-const makeUrl = function(name, token) {
+const makeUrl = function(name: string, token: string) {
     const path = 'https://home.banachewicz.pl/filebrowser/api/raw/230827_095441/'
     const auth = `auth=${token}`;
     const inline = 'inline=true';
@@ -18,11 +16,15 @@ const makeUrl = function(name, token) {
 
 // TODO global
 const timingObject = new TimingObject();
+// TODO sound was created twice in debug mode, prolly need to clean up?
+let alreadySetup = false;
 
-const makeAudio = function(url, timingObject) {
+const makeAudio = function(url: string, timingObject: any) {
     const elem = document.createElement('audio');
     elem.src = url;
-    elem.style = "visibility: hidden;";
+    elem.style.cssText = "visibility: hidden;";
+    elem.muted = false;
+    elem.volume = 1.0;
     document.body.appendChild(elem);
 
     setTimingsrc(elem, timingObject);
@@ -31,65 +33,91 @@ const makeAudio = function(url, timingObject) {
 }
 
 type ChannelProps = {
-    sound: HTMLMediaElement,
+    audio: HTMLMediaElement,
     name: string,
 }
 
 function Channel(props: ChannelProps) {
     const [muted, setMuted] = useState(false);
-    
+    const [volume, setVolume] = useState(100);
+
     return (<div className="channel">
         <input
-            key="mute"
             type="checkbox"
             checked={muted}
             onChange={e => {
-                setMuted(e.target.checked);
-                props.sound.muted = e.target.checked;
+                const muted = e.target.checked;
+                console.log(`Setting mute of ${props.name} to ${muted}`);
+                setMuted(muted);
+                props.audio.muted = muted;
             }}
         >
         </input>
-        <input key="vol" type="range" onChange={(e) => { sound.volume(e.target.value / 100) }}></input>
+        <input type="range" value={volume} onChange={(e) => { 
+            const vol = Number(e.target.value);
+            setVolume(vol);
+            props.audio.volume = vol / 100;
+            console.log(vol, props.audio.volume)
+        }}></input>
+        <span>{props.name}</span>
     </div>);
 }
 
 function App() {    
-    const [sounds, setSounds] = useState(null);
+    type Track = {
+        audio: HTMLMediaElement,
+        name: string,
+    }
+
+    const [tracks, setTracks] = useState<Track[]|null>(null);
 
     const setup = async () => {
+        if (alreadySetup) {
+            return;
+        }
+        alreadySetup = true;
+
         const token = await getToken();
         console.log(token);
 
-        const urls = [
-          'TRACK01.m4a',
-          'TRACK02.m4a',
-          'TRACK03.m4a',
-          'TRACK04.m4a',
-          'TRACK05.m4a',
-          'TRACK06.m4a',
-          'TRACK07.m4a',
-          'TRACK08.m4a',
-        ].map(name => makeUrl(name, token));
+        const trackList = [
+            { url: 'TRACK01.m4a', name: "OHL" },
+            { url: 'TRACK02.m4a', name: "OHR" },
+            { url: 'TRACK03.m4a', name: "ST" },
+            { url: 'TRACK04.m4a', name: "Git B" },
+            { url: 'TRACK05.m4a', name: "Git Ł" },
+            { url: 'TRACK06.m4a', name: "Bas K" },
+            { url: 'TRACK07.m4a', name: "Bas A" },
+            { url: 'TRACK08.m4a', name: "V" },
+        ];
 
-        const audios = urls.map(u => makeAudio(u, timingObject));
-        setSounds(audios);
+        const trackListWithAuth = trackList.map(track => {
+            return { url: makeUrl(track.url, token), name: track.name };
+        });
+
+        const tracks = trackListWithAuth.map(t => {
+            return { audio: makeAudio(t.url, timingObject), name: t.name };
+        });
+        setTracks(tracks);
+        return tracks;
     }
 
     useEffect(() => {
-        setup();
-    }, []);        
+        const objects = setup();
 
-    if (!sounds) {
+        // TODO cleanup
+        return () => { };
+    }, []);
+
+    if (!tracks) {
         return <span>Loading...</span>;
     }
 
-    console.log(sounds);
-
-    const channels = sounds.map(sound =>
-        <Channel sound={sound} name={sound.src} key={sound.src}/>
+    const channels = tracks.map(track =>
+        <Channel audio={track.audio} name={track.name} key={track.name}/>
     );
 
-    const skipRelative = function(deltaSeconds) {
+    const skipRelative = function(deltaSeconds: number) {
         const { position } = timingObject.query();
         timingObject.update({ position: position + deltaSeconds });
     };

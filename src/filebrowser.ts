@@ -1,5 +1,5 @@
 // Function to get the access token from the FileBrowser server
-export async function getToken() {
+export async function getToken(): Promise<string> {
     console.log('Requesting access token...');
 
     try {
@@ -17,5 +17,6 @@ export async function getToken() {
         return await response.text();
     } catch (error) {
         console.error('Error while requesting access token:', error);
+        throw error;
     }
 }
