@@ -9,7 +9,7 @@ COPY ./tsconfig.node.json ./
 COPY ./vite.config.ts ./
 
 COPY ./index.html ./
-COPY ./src ./
+COPY ./src/ ./src/
 
 RUN npm ci
 RUN npm run build
