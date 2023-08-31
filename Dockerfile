@@ -5,7 +5,7 @@ WORKDIR /var/lib/app
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm ci
-RUN npm build
+RUN npm run build
 
 #run stage
 FROM nginx
