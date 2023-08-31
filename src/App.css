@@ -41,9 +41,27 @@
   color: #888;
 }
 
-##################
 
-div.channels {
-  display: 'flex',
-  gap: '5px',
+/*##################*/
+
+.channels {
+  display: flex;
+  flex-direction: row;
+  gap: '5px';
+  width: 900px;
+  height: 500px;
+  background-color: #333;
+}
+
+.channel {
+  padding: 5px;
+  position: relative;
+  border: 1px solid #111;
+  width: 100px;
+  height: 450px;
+}
+
+.channel input[type=range] {
+  -webkit-appearance: slider-vertical;
+  height: 300px;
 }

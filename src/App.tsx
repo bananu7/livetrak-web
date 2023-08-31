@@ -30,6 +30,29 @@ const makeAudio = function(url, timingObject) {
     return elem;
 }
 
+type ChannelProps = {
+    sound: HTMLMediaElement,
+    name: string,
+}
+
+function Channel(props: ChannelProps) {
+    const [muted, setMuted] = useState(false);
+    
+    return (<div className="channel">
+        <input
+            key="mute"
+            type="checkbox"
+            checked={muted}
+            onChange={e => {
+                setMuted(e.target.checked);
+                props.sound.muted = e.target.checked;
+            }}
+        >
+        </input>
+        <input key="vol" type="range" onChange={(e) => { sound.volume(e.target.value / 100) }}></input>
+    </div>);
+}
+
 function App() {    
     const [sounds, setSounds] = useState(null);
 
@@ -59,18 +82,29 @@ function App() {
     if (!sounds) {
         return <span>Loading...</span>;
     }
-    //const channels = sounds.map(sound => <Channel sound={sound} name={"name"} />);
+
+    console.log(sounds);
+
+    const channels = sounds.map(sound =>
+        <Channel sound={sound} name={sound.src} key={sound.src}/>
+    );
+
+    const skipRelative = function(deltaSeconds) {
+        const { position } = timingObject.query();
+        timingObject.update({ position: position + deltaSeconds });
+    };
 
     return (
         <div>
+            <button onClick={() => skipRelative(-5) }>{"<<"}</button>
             <button onClick={() => timingObject.update({ velocity: 1 })}>Play</button>
             <button onClick={() => timingObject.update({ velocity: 0 })}>Pause</button>
             <button onClick={() => timingObject.update({ position: 0, velocity: 0 })}>Stop</button>
-            {/*}
-            <Seeker sounds={sounds} seconds={700} />
-            <div class="channels">
+            <button onClick={() => skipRelative(5) }>{">>"}</button>
+            
+            <div className="channels">
                 {channels}
-            </div>*/}
+            </div>
         </div>
     );
 }
