@@ -105,3 +105,20 @@
   width: 80px;
   margin-top: -17px;
 }
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  background-color: #eee;
+}
+
+/* firefox faders */
+/* slider thumb */
+input[type="range"]::-moz-range-thumb {
+  border: none; /*Removes extra border that FF applies*/
+  border-radius: 0; /*Removes default border-radius that FF applies*/
+
+   /*custom styles*/
+  border: 1px solid black;
+  filter: drop-shadow(-5px 5px 4px #222);
+  height: 40px;
+  width: 80px;
+}
