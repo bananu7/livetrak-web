@@ -18,7 +18,6 @@ const makeUrl = function(name: string, token: string) {
 // TODO global
 console.log("Initializing globals")
 const timingObject = new TimingObject();
-window.timingObject = timingObject;
 const audioContext = new AudioContext();
 // TODO sound was created twice in debug mode, prolly need to clean up?
 let alreadySetup = false;
@@ -155,7 +154,7 @@ function App() {
     }
 
     useEffect(() => {
-        const objects = setup();
+        setup();
         updatePlaybackPosition();
 
         // TODO cleanup
