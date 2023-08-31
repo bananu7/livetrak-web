@@ -5,6 +5,7 @@ WORKDIR /var/lib/app
 COPY ./package.json ./
 COPY ./package-lock.json ./
 COPY ./tsconfig.json ./
+COPY ./tsconfig.node.json ./
 COPY ./vite.config.ts ./
 
 COPY ./index.html ./
