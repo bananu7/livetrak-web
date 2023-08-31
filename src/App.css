@@ -44,6 +44,15 @@
 
 /*##################*/
 
+.transport {
+  margin-bottom: 25px;
+}
+
+.transport span {
+  font-family: monospace;
+  font-size: 72px;
+}
+
 .channels {
   display: flex;
   flex-direction: row;

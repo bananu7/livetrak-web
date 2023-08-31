@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 
 import { getToken } from './filebrowser'
+import { floatToTimestring } from './util'
 
 import { TimingObject } from 'timing-object';
 import { setTimingsrc } from 'timingsrc';
@@ -17,6 +18,7 @@ const makeUrl = function(name: string, token: string) {
 // TODO global
 console.log("Initializing globals")
 const timingObject = new TimingObject();
+window.timingObject = timingObject;
 const audioContext = new AudioContext();
 // TODO sound was created twice in debug mode, prolly need to clean up?
 let alreadySetup = false;
@@ -140,12 +142,27 @@ function App() {
         return tracks;
     }
 
+    const updatePlaybackPosition = () => {
+        const playbackPos = document.getElementById('playbackPosition');
+        if (!playbackPos) {
+            requestAnimationFrame(updatePlaybackPosition);
+            return;
+        }
+
+        const { position } = timingObject.query();
+        playbackPos.innerText = floatToTimestring(position);
+        requestAnimationFrame(updatePlaybackPosition);
+    }
+
     useEffect(() => {
         const objects = setup();
+        updatePlaybackPosition();
 
         // TODO cleanup
         return () => { };
     }, []);
+
+
 
     if (!tracks) {
         return <span>Loading...</span>;
@@ -167,12 +184,15 @@ function App() {
 
     return (
         <div>
-            <div>
-                <button onClick={() => skipRelative(-5) }>{"<<"}</button>
-                <button onClick={() => play()}>Play</button>
-                <button onClick={() => timingObject.update({ velocity: 0 })}>Pause</button>
-                <button onClick={() => timingObject.update({ position: 0, velocity: 0 })}>Stop</button>
-                <button onClick={() => skipRelative(5) }>{">>"}</button>
+            <div className="transport">
+                <span id="playbackPosition"></span>
+                <div>
+                    <button onClick={() => skipRelative(-5) }>⏪</button>
+                    <button onClick={() => play()}>⏵</button>
+                    <button onClick={() => timingObject.update({ velocity: 0 })}>⏸</button>
+                    <button onClick={() => timingObject.update({ position: 0, velocity: 0 })}>⏹</button>
+                    <button onClick={() => skipRelative(5) }>⏩</button>
+                </div>
             </div>
             
             <div className="channels">
