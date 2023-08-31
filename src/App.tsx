@@ -15,19 +15,51 @@ const makeUrl = function(name: string, token: string) {
 }
 
 // TODO global
+console.log("Initializing globals")
 const timingObject = new TimingObject();
+const audioContext = new AudioContext();
 // TODO sound was created twice in debug mode, prolly need to clean up?
 let alreadySetup = false;
 
-const makeAudio = function(url: string, timingObject: any) {
+const makeAudio = function(url: string, timingObject: any, name: string) {
     const elem = document.createElement('audio');
     elem.src = url;
     elem.style.cssText = "visibility: hidden;";
     elem.muted = false;
     elem.volume = 1.0;
+    elem.crossOrigin = "anonymous";
     document.body.appendChild(elem);
 
     setTimingsrc(elem, timingObject);
+
+    /* add measurement node for lights */
+    const node = audioContext.createMediaElementSource(elem);
+    const gainNode = audioContext.createGain();
+    const analyser = audioContext.createAnalyser();
+
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    function calculateVolume() {
+        analyser.getByteFrequencyData(dataArray)
+      
+        let sum = 0;
+        for (const amplitude of dataArray) {
+          sum += amplitude * amplitude
+        }
+
+        const volume = Math.sqrt(sum / dataArray.length)
+        
+        const meter = document.getElementById(`meter-${name}`);
+        if (meter)
+            meter.style.height = `${volume}%`;
+        requestAnimationFrame(calculateVolume)
+    }
+    calculateVolume();
+
+    gainNode.gain.value = 1.0;
+    node.connect(gainNode);
+    node.connect(analyser)
+    gainNode.connect(audioContext.destination);
 
     return elem;
 }
@@ -55,12 +87,15 @@ function Channel(props: ChannelProps) {
             >
             </input>
         </div>
-        <div className="fader">
-            <input type="range" value={volume} onChange={(e) => { 
-                const vol = Number(e.target.value);
-                setVolume(vol);
-                props.audio.volume = vol / 100;
-            }}></input>
+        <div style={{display: 'flex'}}>
+            <div className="fader">
+                <input type="range" value={volume} onChange={(e) => { 
+                    const vol = Number(e.target.value);
+                    setVolume(vol);
+                    props.audio.volume = vol / 100;
+                }}></input>
+            </div>
+            <div id={`meter-${props.name}`} style={{backgroundColor: 'lime', width: '5px', float: 'right'}}></div>
         </div>
         <span>{props.name}</span>
     </div>);
@@ -99,7 +134,7 @@ function App() {
         });
 
         const tracks = trackListWithAuth.map(t => {
-            return { audio: makeAudio(t.url, timingObject), name: t.name };
+            return { audio: makeAudio(t.url, timingObject, t.name), name: t.name };
         });
         setTracks(tracks);
         return tracks;
@@ -120,6 +155,11 @@ function App() {
         <Channel audio={track.audio} name={track.name} key={track.name}/>
     );
 
+    const play = function() {
+        audioContext.resume();
+        timingObject.update({ velocity: 1 })
+    }
+
     const skipRelative = function(deltaSeconds: number) {
         const { position } = timingObject.query();
         timingObject.update({ position: position + deltaSeconds });
@@ -127,11 +167,13 @@ function App() {
 
     return (
         <div>
-            <button onClick={() => skipRelative(-5) }>{"<<"}</button>
-            <button onClick={() => timingObject.update({ velocity: 1 })}>Play</button>
-            <button onClick={() => timingObject.update({ velocity: 0 })}>Pause</button>
-            <button onClick={() => timingObject.update({ position: 0, velocity: 0 })}>Stop</button>
-            <button onClick={() => skipRelative(5) }>{">>"}</button>
+            <div>
+                <button onClick={() => skipRelative(-5) }>{"<<"}</button>
+                <button onClick={() => play()}>Play</button>
+                <button onClick={() => timingObject.update({ velocity: 0 })}>Pause</button>
+                <button onClick={() => timingObject.update({ position: 0, velocity: 0 })}>Stop</button>
+                <button onClick={() => skipRelative(5) }>{">>"}</button>
+            </div>
             
             <div className="channels">
                 {channels}
