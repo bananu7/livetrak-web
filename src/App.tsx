@@ -42,14 +42,14 @@ const makeAudio = function(url: string, timingObject: any, name: string) {
     const dataArray = new Uint8Array(bufferLength);
     function calculateVolume() {
         analyser.getByteFrequencyData(dataArray)
-      
+
         let sum = 0;
         for (const amplitude of dataArray) {
           sum += amplitude * amplitude
         }
 
         const volume = Math.sqrt(sum / dataArray.length)
-        
+
         const meter = document.getElementById(`meter-${name}`);
         if (meter)
             meter.style.height = `${volume}%`;
@@ -70,11 +70,25 @@ type ChannelProps = {
     name: string,
 }
 
+function ChannelStrip() {
+  return (<div className="strip">
+    <button>EQ OFF</button>
+    <div className="rotary blue">SEND EFX</div>
+    <div className="rotary red">PAN</div>
+    <button className="toggled">LOW CUT</button>
+    <div className="rotary green">HIGH</div>
+    <div className="rotary green">FREQ</div>
+    <div className="rotary green">MID</div>
+    <div className="rotary green">LOW</div>
+  </div>);
+}
+
 function Channel(props: ChannelProps) {
     const [muted, setMuted] = useState(false);
     const [volume, setVolume] = useState(100);
 
     return (<div className="channel">
+        <ChannelStrip />
         <div>
             MUTE
             <input
@@ -90,7 +104,7 @@ function Channel(props: ChannelProps) {
         </div>
         <div style={{display: 'flex'}}>
             <div className="fader">
-                <input type="range" value={volume} onChange={(e) => { 
+                <input type="range" value={volume} onChange={(e) => {
                     const vol = Number(e.target.value);
                     setVolume(vol);
                     props.audio.volume = vol / 100;
@@ -102,7 +116,7 @@ function Channel(props: ChannelProps) {
     </div>);
 }
 
-function App() {    
+function App() {
     type Track = {
         audio: HTMLMediaElement,
         name: string,
@@ -193,7 +207,7 @@ function App() {
                     <button onClick={() => skipRelative(5) }>⏩</button>
                 </div>
             </div>
-            
+
             <div className="channels">
                 {channels}
             </div>
