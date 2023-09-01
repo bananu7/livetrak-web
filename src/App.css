@@ -86,13 +86,14 @@
   height: 700px;
   box-sizing: border-box;
 
-  background-color: #444;
+  background: linear-gradient(0deg, #3c3c3c 0%, #444 100%);
   /*overflow: hidden;*/
 
   border-collapse: collapse;
   padding-top: 10px;
   padding-left: 7px;
   padding-right: 7px;
+  user-select: none;
 }
 
 .channel:not(:first-child) {
@@ -106,7 +107,6 @@
 .channel .fader {
   height: 300px;
   width: 60px;
-  background-color: #444;
 }
 
 .channel input[type=range] {
@@ -135,8 +135,9 @@
   appearance: none;
 
   /*custom styles*/
-  background-color: #ccc;
+  background: linear-gradient(90deg, #111 0%, #444 10%, #ccc 15%, #444 49%, #ddd 49%, #ddd 51%, #444 51%, #222 87%, #444 87%, #ccc 100%);
   border: 1px solid black;
+  border-radius: 3px;
   filter: drop-shadow(-5px 5px 4px #222);
   height: 40px;
   width: 80px;
@@ -151,7 +152,7 @@ input[type="range"]:focus::-webkit-slider-thumb {
 /* slider thumb */
 input[type="range"]::-moz-range-thumb {
   border: none; /*Removes extra border that FF applies*/
-  border-radius: 0; /*Removes default border-radius that FF applies*/
+  border-radius: 3px;
 
    /*custom styles*/
   border: 1px solid black;
@@ -169,7 +170,7 @@ input[type="range"]::-moz-range-thumb {
   column-gap: 5px;
   row-gap: 5px;
 
-  background-color: #2d4d87;
+  background: linear-gradient(0deg, #2b4b85 0%, #2d4d87 100%);;
 }
 
 .strip button {
@@ -194,10 +195,10 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .strip .rotary {
-  top: 5px;
-  left: 5px;
-  position: absolute;
-  box-sizing: border-box;
+    top: 5px;
+    left: 5px;
+    position: absolute;
+    box-sizing: border-box;
     border: 2px solid black;
     width: 30px;
     height: 30px;
