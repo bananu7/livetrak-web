@@ -3,6 +3,7 @@ import './App.css'
 
 import { getToken } from './filebrowser'
 import { floatToTimestring } from './util'
+import { RotaryEncoder } from './components/RotaryEncoder.tsx'
 
 import { TimingObject } from 'timing-object';
 import { setTimingsrc } from 'timingsrc';
@@ -74,14 +75,14 @@ type ChannelProps = {
 
 function ChannelStrip() {
   return (<div className="strip">
-    <button>EQ OFF</button>
-    <div className="rotary blue">SEND EFX</div>
-    <div className="rotary red">PAN</div>
-    <button className="toggled">LOW CUT</button>
-    <div className="rotary green">HIGH</div>
-    <div className="rotary green">FREQ</div>
-    <div className="rotary green">MID</div>
-    <div className="rotary green">LOW</div>
+    <button className="toggled">EQ OFF</button>
+    <RotaryEncoder value={0.2} zeroAtCenter={false} color="blue">FX</RotaryEncoder>
+    <RotaryEncoder value={0.4} zeroAtCenter={false} color="red">PAN</RotaryEncoder>
+    <button>LOW CUT</button>
+    <RotaryEncoder value={0} zeroAtCenter={true} color="green">HIGH</RotaryEncoder>
+    <RotaryEncoder color="green">FREQ</RotaryEncoder>
+    <RotaryEncoder value={1} zeroAtCenter={true} color="green">MID</RotaryEncoder>
+    <RotaryEncoder value={-0.5} zeroAtCenter={true} color="green">LOW</RotaryEncoder>
   </div>);
 }
 

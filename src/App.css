@@ -59,7 +59,7 @@
 
 .transport span {
   font-family: monospace;
-  font-size: 60px;
+  font-size: 48px;
   padding: 3px;
 }
 
@@ -73,7 +73,7 @@
   flex-direction: row;
   gap: '5px';
   width: 900px;
-  height: 900px;
+  height: 700px;
   background-color: #444;
 }
 
@@ -84,8 +84,10 @@
   gap: 20px;
 
   border: 1px solid #111;
+  border-collapse: collapse;
   width: 100px;
-  height: 850px;
+  height: 700px;
+  box-sizing: border-box;
 
   /*overflow: hidden;*/
 }
@@ -143,7 +145,7 @@ input[type="range"]::-moz-range-thumb {
    /*custom styles*/
   border: 1px solid black;
   filter: drop-shadow(-5px 5px 4px #222);
-  height: 40px;
+  height: 60px;
   width: 80px;
 }
 
@@ -166,6 +168,8 @@ input[type="range"]::-moz-range-thumb {
     background-color: #999;
     border: 3px solid #333;
     color: black;
+    width: 40px;
+    height: 40px;
 }
 
 .strip button.toggled {
@@ -175,10 +179,18 @@ input[type="range"]::-moz-range-thumb {
     filter: drop-shadow(0px 0px 5px rgba(252,166,70,1) );
 }
 
+.strip .rotaryWrapper span {
+  font-size: 12px;
+}
+
 .strip .rotary {
+  top: 5px;
+  left: 5px;
+  position: absolute;
+  box-sizing: border-box;
     border: 2px solid black;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 21px;
 
     background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 100%);
