@@ -4,9 +4,7 @@ import './App.css'
 import { getToken } from './filebrowser'
 import { floatToTimestring } from './util'
 import { Channel } from './components/Channel.tsx'
-
-import { TimingObject } from 'timing-object';
-import { setTimingsrc } from 'timingsrc';
+import { AudioSystem } from './audio'
 
 const FOLDER_NAME = '230827_095441';
 
@@ -18,55 +16,9 @@ const makeUrl = function(name: string, token: string) {
     return `${path}${name}?${auth}&${inline}`;
 }
 
-// TODO global
-console.log("Initializing globals")
-const timingObject = new TimingObject();
-const audioContext = new AudioContext();
 // TODO sound was created twice in debug mode, prolly need to clean up?
 let alreadySetup = false;
-
-const makeAudio = function(url: string, timingObject: any, name: string) {
-    const elem = document.createElement('audio');
-    elem.src = url;
-    elem.style.cssText = "visibility: hidden;";
-    elem.muted = false;
-    elem.volume = 1.0;
-    elem.crossOrigin = "anonymous";
-    document.body.appendChild(elem);
-
-    setTimingsrc(elem, timingObject);
-
-    /* add measurement node for lights */
-    const node = audioContext.createMediaElementSource(elem);
-    const gainNode = audioContext.createGain();
-    const analyser = audioContext.createAnalyser();
-
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-    function calculateVolume() {
-        analyser.getByteFrequencyData(dataArray)
-
-        let sum = 0;
-        for (const amplitude of dataArray) {
-          sum += amplitude * amplitude
-        }
-
-        const volume = Math.sqrt(sum / dataArray.length)
-
-        const meter = document.getElementById(`meter-${name}`);
-        if (meter)
-            meter.style.height = `${volume}%`;
-        requestAnimationFrame(calculateVolume)
-    }
-    calculateVolume();
-
-    gainNode.gain.value = 1.0;
-    node.connect(gainNode);
-    node.connect(analyser)
-    gainNode.connect(audioContext.destination);
-
-    return elem;
-}
+let audioSystem : AudioSystem|null = null;
 
 function App() {
     type Track = {
@@ -81,6 +33,7 @@ function App() {
             return;
         }
         alreadySetup = true;
+        audioSystem = new AudioSystem();
 
         const token = await getToken();
         console.log(token);
@@ -101,20 +54,23 @@ function App() {
         });
 
         const tracks = trackListWithAuth.map(t => {
-            return { audio: makeAudio(t.url, timingObject, t.name), name: t.name };
+            return { audio: audioSystem!.makeAudio(t.url, t.name), name: t.name };
         });
         setTracks(tracks);
         return tracks;
     }
 
     const updatePlaybackPosition = () => {
+        if (!audioSystem)
+            return;
+
         const playbackPos = document.getElementById('playbackPosition');
         if (!playbackPos) {
             requestAnimationFrame(updatePlaybackPosition);
             return;
         }
 
-        const { position } = timingObject.query();
+        const { position } = audioSystem.query();
         playbackPos.innerText = floatToTimestring(position);
         requestAnimationFrame(updatePlaybackPosition);
     }
@@ -138,13 +94,28 @@ function App() {
     );
 
     const play = function() {
-        audioContext.resume();
-        timingObject.update({ velocity: 1 })
+        if (!audioSystem)
+            return;
+        audioSystem.update({ velocity: 1 })
+    }
+
+    const pause = function() {
+        if (!audioSystem)
+            return;
+        audioSystem.update({ velocity: 0 })
+    }
+
+    const stop = function() {
+        if (!audioSystem)
+            return;
+        audioSystem.update({ position: 0, velocity: 0 })
     }
 
     const skipRelative = function(deltaSeconds: number) {
-        const { position } = timingObject.query();
-        timingObject.update({ position: position + deltaSeconds });
+        if (!audioSystem)
+            return;
+        const { position } = audioSystem.query();
+        audioSystem.update({ position: position + deltaSeconds });
     };
 
     return (
@@ -158,8 +129,8 @@ function App() {
                 <div>
                     <button onClick={() => skipRelative(-5) }>⏪</button>
                     <button onClick={() => play()}>⏵</button>
-                    <button onClick={() => timingObject.update({ velocity: 0 })}>⏸</button>
-                    <button onClick={() => timingObject.update({ position: 0, velocity: 0 })}>⏹</button>
+                    <button onClick={() => pause()}>⏸</button>
+                    <button onClick={() => stop()}>⏹</button>
                     <button onClick={() => skipRelative(5) }>⏩</button>
                 </div>
             </div>
