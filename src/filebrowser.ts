@@ -9,8 +9,8 @@ export async function getToken(): Promise<string> {
                 'Content-type': 'application/json; charset=UTF-8',
             },
             body: JSON.stringify({
-                username: '',
-                password: '',
+                username: 'baitreader',
+                password: 'baitreader',
                 recaptcha: ""
             })
         });
