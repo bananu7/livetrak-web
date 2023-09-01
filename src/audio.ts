@@ -1,13 +1,26 @@
 import { TimingObject, ITimingObject } from 'timing-object';
 import { setTimingsrc } from 'timingsrc';
 
-type AudioCommand = {
+export type AudioCommand = {
     position?: number;
     velocity?: number;
 }
-type AudioState = {
+export type AudioState = {
     position: number,
     velocity: number,
+}
+
+export type EqController = {
+    setLowCutEnabled: (lowCut: boolean) => void;
+    setLowGain: (lowGain: number) => void;
+    setMidGain: (midGain: number) => void;
+    // setMidFrequency: (freq: number) => void
+    setHighGain: (highGain: number) => void;
+}
+
+export type ChannelController = EqController & {
+    //setBypassEq => (bypassEq: boolean) => void;
+    setGain: (gain: number) => void;
 }
 
 export class AudioSystem {
@@ -20,7 +33,7 @@ export class AudioSystem {
         this.audioContext = new AudioContext();
     }
 
-    makeAudio (url: string, name: string) {
+    makeAudio (url: string, name: string): ChannelController {
         const elem = document.createElement('audio');
         elem.src = url;
         elem.style.cssText = "visibility: hidden;";
@@ -59,13 +72,16 @@ export class AudioSystem {
         node.connect(gainNode);
         node.connect(analyser)
 
-        this.makeEqChain(gainNode, this.audioContext.destination)
-        //gainNode.connect(this.audioContext.destination);
+        // gainNode.connect(this.audioContext.destination); // - eq bypass
 
-        return elem;
+        const eqController = this.makeEqChain(gainNode, this.audioContext.destination);
+        return {
+            setGain: g => gainNode.gain.value = g,
+            ...eqController
+        };
     }
 
-    private makeEqChain(sourceNode: AudioNode, destNode: AudioNode) {
+    private makeEqChain(sourceNode: AudioNode, destNode: AudioNode): EqController {
         const lowCut = this.audioContext.createBiquadFilter();
         lowCut.type = 'highpass';
         lowCut.frequency.value = 75;
@@ -89,6 +105,14 @@ export class AudioSystem {
         high.connect(low);
         low.connect(mid);
         mid.connect(destNode);
+
+        return {
+            setLowCutEnabled: e => lowCut.frequency.value = e ? 75 : 0,
+            setLowGain: g => low.gain.value = g,
+            setMidGain: g => mid.gain.value = g,
+            // setMidFrequency: (freq: number) => void
+            setHighGain: g => high.gain.value = g,
+        }
     }
 
     resume() {

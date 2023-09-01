@@ -4,7 +4,7 @@ import './App.css'
 import { getToken } from './filebrowser'
 import { floatToTimestring } from './util'
 import { Channel } from './components/Channel.tsx'
-import { AudioSystem } from './audio'
+import { AudioSystem, ChannelController } from './audio'
 
 const FOLDER_NAME = '230827_095441';
 
@@ -22,7 +22,7 @@ let audioSystem : AudioSystem|null = null;
 
 function App() {
     type Track = {
-        audio: HTMLMediaElement,
+        controller: ChannelController,
         name: string,
     }
 
@@ -54,7 +54,7 @@ function App() {
         });
 
         const tracks = trackListWithAuth.map(t => {
-            return { audio: audioSystem!.makeAudio(t.url, t.name), name: t.name };
+            return { controller: audioSystem!.makeAudio(t.url, t.name), name: t.name };
         });
         setTracks(tracks);
         return tracks;
@@ -90,7 +90,7 @@ function App() {
     }
 
     const channels = tracks.map(track =>
-        <Channel audio={track.audio} name={track.name} key={track.name}/>
+        <Channel controller={track.controller} name={track.name} key={track.name}/>
     );
 
     const play = function() {

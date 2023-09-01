@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { ChannelStrip } from './ChannelStrip.tsx'
+import { ChannelController } from '../audio'
 
 export type ChannelProps = {
-    audio: HTMLMediaElement,
+    controller: ChannelController,
     name: string,
 }
 
@@ -11,7 +12,7 @@ export function Channel(props: ChannelProps) {
     const [volume, setVolume] = useState(100);
 
     return (<div className="channel">
-        <ChannelStrip />
+        <ChannelStrip controller={props.controller} />
         <div>
             MUTE
             <input
@@ -20,7 +21,7 @@ export function Channel(props: ChannelProps) {
                 onChange={e => {
                     const muted = e.target.checked;
                     setMuted(muted);
-                    props.audio.muted = muted;
+                    //controller.setMuted()
                 }}
             >
             </input>
@@ -30,7 +31,7 @@ export function Channel(props: ChannelProps) {
                 <input type="range" value={volume} onChange={(e) => {
                     const vol = Number(e.target.value);
                     setVolume(vol);
-                    props.audio.volume = vol / 100;
+                    props.controller.setGain(vol / 100);                    
                 }}></input>
             </div>
             <div id={`meter-${props.name}`} style={{backgroundColor: 'lime', width: '5px', float: 'right'}}></div>
