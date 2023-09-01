@@ -7,8 +7,10 @@ import { floatToTimestring } from './util'
 import { TimingObject } from 'timing-object';
 import { setTimingsrc } from 'timingsrc';
 
+const FOLDER_NAME = '230827_095441';
+
 const makeUrl = function(name: string, token: string) {
-    const path = 'https://home.banachewicz.pl/filebrowser/api/raw/230827_095441/'
+    const path = `https://home.banachewicz.pl/filebrowser/api/raw/${FOLDER_NAME}/`;
     const auth = `auth=${token}`;
     const inline = 'inline=true';
 
@@ -198,7 +200,11 @@ function App() {
     return (
         <div>
             <div className="transport">
-                <span id="playbackPosition"></span>
+                <div className="screen">
+                    <span className="inverted">{FOLDER_NAME}</span>
+                    <br />
+                    <span id="playbackPosition"></span>
+                </div>
                 <div>
                     <button onClick={() => skipRelative(-5) }>⏪</button>
                     <button onClick={() => play()}>⏵</button>
