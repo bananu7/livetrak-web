@@ -80,16 +80,27 @@
 .channel {
   display: flex;
   flex-direction: column;
-  padding: 5px;
   gap: 20px;
 
-  border: 1px solid #111;
-  border-collapse: collapse;
   width: 100px;
   height: 700px;
   box-sizing: border-box;
 
+  background-color: #444;
   /*overflow: hidden;*/
+
+  border-collapse: collapse;
+  padding-top: 10px;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+.channel:not(:first-child) {
+  border-left: 1px solid #999;
+}
+
+.channel:not(:last-child) {
+  border-right: 1px solid #999;
 }
 
 .channel .fader {
@@ -152,14 +163,13 @@ input[type="range"]::-moz-range-thumb {
 /* Channel strip */
 .strip {
   display: grid;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: 25% 25% 25% 25%;
+  grid-template-columns: 50% 50% 5px;
+  grid-template-rows: 24% 24% 24% 24%;
   grid-auto-flow: column;
   column-gap: 5px;
   row-gap: 5px;
 
   background-color: #2d4d87;
-  padding: 0px;
 }
 
 .strip button {
