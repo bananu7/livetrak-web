@@ -1,21 +1,37 @@
-import { useState, useEffect } from 'react'
+import { useCallback, PropsWithChildren, CSSProperties, WheelEvent} from 'react'
 
 export type RotaryEncoderProps = {
     color: string,
-    zeroAtCenter: boolean,
-    value: value,
+    zeroAtCenter?: boolean,
+    value: number,
     setValue?: (v: number) => void,
-    children: React.Element|React.Element[],
 }
 
-export function RotaryEncoder(props: RotaryEncoderProps) {
+export function RotaryEncoder(props: PropsWithChildren<RotaryEncoderProps>) {
+    const zeroAtCenter = props.zeroAtCenter ?? true;
+
+    const wheelHandler = useCallback((e: WheelEvent<HTMLDivElement>) => {
+        // TODO react doesn't support active listeners?
+        //e.preventDefault();
+        if (!props.setValue)
+            return;
+        
+        const delta = 0.05;
+
+        if (e.deltaY < 0 && props.value < 1) {
+            props.setValue(props.value + delta);
+        } else if (e.deltaY > 0 && props.value > -1) {
+            props.setValue(props.value - delta);
+        }       
+    }, [props.value]);
+
     return (
-        <div className="rotaryWrapper">
+        <div className="rotaryWrapper" onWheel={wheelHandler}>
             <div style={{position: 'relative'}}>
                 <div className={"rotary " + props.color}></div>
-                <RotaryHalo value={props.value} zeroAtCenter={props.zeroAtCenter} />
+                <RotaryHalo value={props.value} zeroAtCenter={zeroAtCenter} />
             </div>
-            <span>{...props.children}</span>
+            <span>{props.children}</span>
         </div>
     );
 }
@@ -42,7 +58,7 @@ export function RotaryHalo(props: { value: number, zeroAtCenter: boolean }) {
         ? gradientFromCenter(props.value, '#e3a127')
         : gradientFromLeft(props.value, '#e3a127');
 
-    const style = {
+    const style : CSSProperties = {
         width: '40px',
         height: '40px',
         background,
