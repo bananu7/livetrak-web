@@ -58,9 +58,37 @@ export class AudioSystem {
         gainNode.gain.value = 1.0;
         node.connect(gainNode);
         node.connect(analyser)
-        gainNode.connect(this.audioContext.destination);
+
+        this.makeEqChain(gainNode, this.audioContext.destination)
+        //gainNode.connect(this.audioContext.destination);
 
         return elem;
+    }
+
+    private makeEqChain(sourceNode: AudioNode, destNode: AudioNode) {
+        const lowCut = this.audioContext.createBiquadFilter();
+        lowCut.type = 'highpass';
+        lowCut.frequency.value = 75;
+
+        const low = this.audioContext.createBiquadFilter();
+        low.type = 'lowshelf';
+        low.frequency.value = 100;
+        low.gain.value = 0;
+
+        const mid = this.audioContext.createBiquadFilter();
+        mid.type = 'peaking';
+        mid.gain.value = 0;
+
+        const high = this.audioContext.createBiquadFilter();
+        high.type = 'highshelf';
+        high.frequency.value = 10000;
+        high.gain.value = 0;
+
+        sourceNode.connect(lowCut);
+        lowCut.connect(high);
+        high.connect(low);
+        low.connect(mid);
+        mid.connect(destNode);
     }
 
     resume() {
