@@ -129,8 +129,8 @@ function App() {
                     <span id="playbackPosition"></span>
                 </div>
                 <div>
-                    <button onClick={() => skipRelative(-600) }>-10m</button>
-                    <button onClick={() => skipRelative(-60) }>-1m</button>
+                    <button onClick={() => skipRelative(-600) }>&minus;10m</button>
+                    <button onClick={() => skipRelative(-60) }>&minus;1m</button>
                     <button onClick={() => skipRelative(-5) }>⏪</button>
                     <button onClick={() => play()}>⏵</button>
                     <button onClick={() => pause()}>⏸</button>
