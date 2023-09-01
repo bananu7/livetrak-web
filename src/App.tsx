@@ -47,6 +47,7 @@ function App() {
             { url: 'TRACK06.m4a', name: "Bas K" },
             { url: 'TRACK07.m4a', name: "Bas A" },
             { url: 'TRACK08.m4a', name: "V" },
+            { url: 'TRACK09_10.m4a', name: "Keys" },
         ];
 
         const trackListWithAuth = trackList.map(track => {
@@ -128,11 +129,15 @@ function App() {
                     <span id="playbackPosition"></span>
                 </div>
                 <div>
+                    <button onClick={() => skipRelative(-600) }>-10m</button>
+                    <button onClick={() => skipRelative(-60) }>-1m</button>
                     <button onClick={() => skipRelative(-5) }>⏪</button>
                     <button onClick={() => play()}>⏵</button>
                     <button onClick={() => pause()}>⏸</button>
                     <button onClick={() => stop()}>⏹</button>
                     <button onClick={() => skipRelative(5) }>⏩</button>
+                    <button onClick={() => skipRelative(60) }>+1m</button>
+                    <button onClick={() => skipRelative(600) }>+10m</button>
                 </div>
             </div>
 
