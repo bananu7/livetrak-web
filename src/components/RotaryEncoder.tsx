@@ -32,7 +32,8 @@ function gradientFromCenter(v: number, color: string) {
 }
 
 function gradientFromLeft(v: number, color: string) {
-
+    const perc = v * 280;
+    return `conic-gradient(from 220deg at 50% 50%, ${color} 0%, ${color} ${perc}deg, black ${perc}deg)`;
 }
 
 export function RotaryHalo(props: { value: number, zeroAtCenter: boolean }) {

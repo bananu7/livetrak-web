@@ -77,7 +77,7 @@ function ChannelStrip() {
   return (<div className="strip">
     <button className="toggled">EQ OFF</button>
     <RotaryEncoder value={0.2} zeroAtCenter={false} color="blue">FX</RotaryEncoder>
-    <RotaryEncoder value={0.4} zeroAtCenter={false} color="red">PAN</RotaryEncoder>
+    <RotaryEncoder value={0.4} zeroAtCenter={true} color="red">PAN</RotaryEncoder>
     <button>LOW CUT</button>
     <RotaryEncoder value={0} zeroAtCenter={true} color="green">HIGH</RotaryEncoder>
     <RotaryEncoder color="green">FREQ</RotaryEncoder>
