@@ -45,8 +45,22 @@ export function ChannelStrip(props: ChannelStripProps) {
         props.controller.setLowGain(g * EQ_DB_RANGE);
     }, [props.controller.setHighGain]);
 
+    // short-circuit if bypass is enabled
+    if (eqBypass) {
+        return (<div className="strip">
+            <button className={"toggled"} onClick={eqBypassToggle}>EQ OFF</button>
+            <RotaryEncoder value={fx} setValue={setFx} zeroAtCenter={false} color="blue">FX</RotaryEncoder>
+            <RotaryEncoder value={pan} setValue={setPan} color="red">PAN</RotaryEncoder>
+            <button>LOW CUT</button>
+            <RotaryEncoder value={0} color="green">HIGH</RotaryEncoder>
+            <RotaryEncoder value={0} color="green">FREQ</RotaryEncoder>
+            <RotaryEncoder value={0} color="green">MID</RotaryEncoder>
+            <RotaryEncoder value={0} color="green">LOW</RotaryEncoder>
+        </div>);
+    }
+
     return (<div className="strip">
-        <button className={eqBypass ? "toggled" : ""} onClick={eqBypassToggle}>EQ OFF</button>
+        <button onClick={eqBypassToggle}>EQ OFF</button>
         <RotaryEncoder value={fx} setValue={setFx} zeroAtCenter={false} color="blue">FX</RotaryEncoder>
         <RotaryEncoder value={pan} setValue={setPan} color="red">PAN</RotaryEncoder>
         <button className={lowCut ? "toggled" : ""} onClick={lowCutToggle}>LOW CUT</button>
