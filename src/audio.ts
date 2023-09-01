@@ -19,7 +19,7 @@ export type EqController = {
 }
 
 export type ChannelController = EqController & {
-    //setBypassEq => (bypassEq: boolean) => void;
+    setEqBypass: (bypassEq: boolean) => void;
     setGain: (gain: number) => void;
 }
 
@@ -77,6 +77,7 @@ export class AudioSystem {
         const eqController = this.makeEqChain(gainNode, this.audioContext.destination);
         return {
             setGain: g => gainNode.gain.value = g,
+            setEqBypass: eqBypass => {return;}, // TODO implement
             ...eqController
         };
     }
