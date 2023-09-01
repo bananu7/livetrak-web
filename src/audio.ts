@@ -15,9 +15,9 @@ export class AudioSystem {
     timingObject: ITimingObject;
 
     constructor() {
+        console.log("[audio] Creating new AudioSystem");
         this.timingObject = new TimingObject();
         this.audioContext = new AudioContext();
-        //audioContext.resume();
     }
 
     makeAudio (url: string, name: string) {
@@ -61,6 +61,10 @@ export class AudioSystem {
         gainNode.connect(this.audioContext.destination);
 
         return elem;
+    }
+
+    resume() {
+        this.audioContext.resume();
     }
 
     update(command: AudioCommand) {

@@ -96,6 +96,7 @@ function App() {
     const play = function() {
         if (!audioSystem)
             return;
+        audioSystem.resume();
         audioSystem.update({ velocity: 1 })
     }
 
