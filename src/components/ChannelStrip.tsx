@@ -28,19 +28,19 @@ export function ChannelStrip(props: ChannelStripProps) {
         const cut = !lowCut;
         props.controller.setLowCutEnabled(cut);
         setLowCut(cut);
-    }, );
+    }, [lowCut, props.controller.setLowCutEnabled]);
 
-    const setHigh = useCallback(g => {
+    const setHigh = useCallback((g: number) => {
         setHighState(g);
         props.controller.setHighGain(g * EQ_DB_RANGE);
     }, [props.controller.setHighGain]);
 
-    const setMid = useCallback(g => {
+    const setMid = useCallback((g: number) => {
         setMidState(g);
         props.controller.setMidGain(g * EQ_DB_RANGE);
     }, [props.controller.setHighGain]);
 
-    const setLow = useCallback(g => {
+    const setLow = useCallback((g: number) => {
         setLowState(g);
         props.controller.setLowGain(g * EQ_DB_RANGE);
     }, [props.controller.setHighGain]);

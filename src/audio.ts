@@ -77,7 +77,7 @@ export class AudioSystem {
         const eqController = this.makeEqChain(gainNode, this.audioContext.destination);
         return {
             setGain: g => gainNode.gain.value = g,
-            setEqBypass: eqBypass => {return;}, // TODO implement
+            setEqBypass: _eqBypass => {return;}, // TODO implement
             ...eqController
         };
     }
