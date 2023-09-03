@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { ChannelStrip } from './ChannelStrip.tsx'
 import { ChannelController } from '../audio'
 
@@ -11,12 +11,12 @@ export function Channel(props: ChannelProps) {
     const [muted, setMuted] = useState(false);
     const [volume, setVolume] = useState(100);
 
-    const muteClick = () => {
+    const muteClick = useCallback(() => {
         setMuted(m => {
-            console.log(m);
+            props.controller.setMute(!m);
             return(!m)
         });
-    };
+    }, [props.controller.setMute]);
 
     return (<div className="channel">
         <ChannelStrip controller={props.controller} />

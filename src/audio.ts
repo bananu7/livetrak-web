@@ -19,6 +19,7 @@ export type EqController = {
 }
 
 export type ChannelController = EqController & {
+    setMute: (mute: boolean) => void;
     setEqBypass: (bypassEq: boolean) => void;
     setGain: (gain: number) => void;
 }
@@ -47,6 +48,7 @@ export class AudioSystem {
         /* add measurement node for lights */
         const node = this.audioContext.createMediaElementSource(elem);
         const gainNode = this.audioContext.createGain();
+        const muteNode = this.audioContext.createGain();
         const analyser = this.audioContext.createAnalyser();
 
         const bufferLength = analyser.frequencyBinCount;
@@ -70,13 +72,15 @@ export class AudioSystem {
 
         gainNode.gain.value = 1.0;
         node.connect(gainNode);
-        node.connect(analyser)
+        node.connect(analyser); // TOOD this could be pre-fader or post-fader
+        gainNode.connect(muteNode);
 
-        // gainNode.connect(this.audioContext.destination); // - eq bypass
+        // gainNode.connect(this.audioContext.destination); // TODO - eq bypass
 
-        const eqController = this.makeEqChain(gainNode, this.audioContext.destination);
+        const eqController = this.makeEqChain(muteNode, this.audioContext.destination);
         return {
             setGain: g => gainNode.gain.value = g,
+            setMute: m => muteNode.gain.value = m ? 0 : 1,
             setEqBypass: _eqBypass => {return;}, // TODO implement
             ...eqController
         };
