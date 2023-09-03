@@ -75,6 +75,9 @@
   width: 900px;
   height: 700px;
   background-color: #444;
+
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .channel {
@@ -94,13 +97,7 @@
   padding-left: 7px;
   padding-right: 7px;
   user-select: none;
-}
-
-.channel:not(:first-child) {
   border-left: 1px solid #999;
-}
-
-.channel:not(:last-child) {
   border-right: 1px solid #999;
 }
 
@@ -144,6 +141,39 @@
   margin-top: -17px;
 }
 
+.channel .meterWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2px;
+  background-color: #222;
+  border-radius: 3px;
+  height: 100%;
+}
+
+/* For all soft-looking buttons */
+.channel button {
+    font-size: 10px;
+    display: block;
+    background-color: #999;
+    border: 3px solid #333;
+    color: black;
+}
+
+/* red lamp-like */
+.channel button.toggledRed {
+    border-color: #6e3243;
+    background: radial-gradient(circle, #e3a8b1 0%, #a85160 100%);
+    filter: drop-shadow(0px 0px 5px #a85160 );
+}
+
+/* yellow lamp-like */
+.channel button.toggledYellow, .channel button.toggled {
+    border-color: #6e410e;
+    background: radial-gradient(circle, rgba(251,235,63,1) 0%, rgba(252,166,70,1) 100%);
+    filter: drop-shadow(0px 0px 5px rgba(252,166,70,1) );
+}
+
 input[type="range"]:focus::-webkit-slider-thumb {
   background-color: #eee;
 }
@@ -174,20 +204,8 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .strip button {
-    font-size: 10px;
-    display: block;
-    background-color: #999;
-    border: 3px solid #333;
-    color: black;
     width: 40px;
     height: 40px;
-}
-
-.strip button.toggled {
-    border-color: #6e410e;
-    background: rgb(251,235,63);
-    background: radial-gradient(circle, rgba(251,235,63,1) 0%, rgba(252,166,70,1) 100%);
-    filter: drop-shadow(0px 0px 5px rgba(252,166,70,1) );
 }
 
 .strip .rotaryWrapper span {

@@ -11,20 +11,17 @@ export function Channel(props: ChannelProps) {
     const [muted, setMuted] = useState(false);
     const [volume, setVolume] = useState(100);
 
+    const muteClick = () => {
+        setMuted(m => {
+            console.log(m);
+            return(!m)
+        });
+    };
+
     return (<div className="channel">
         <ChannelStrip controller={props.controller} />
         <div>
-            MUTE
-            <input
-                type="checkbox"
-                checked={muted}
-                onChange={e => {
-                    const muted = e.target.checked;
-                    setMuted(muted);
-                    //controller.setMuted()
-                }}
-            >
-            </input>
+            <MuteButton muted={muted} onClick={muteClick} />
         </div>
         <div style={{display: 'flex'}}>
             <div className="fader">
@@ -40,4 +37,18 @@ export function Channel(props: ChannelProps) {
         </div>
         <span>{props.name}</span>
     </div>);
+}
+
+export function MuteButton(props: { muted: boolean, onClick: () => void }) {
+    return (
+        <div style={{width: '50%', float: 'right', display: 'flex', alignItems: 'center', flexDirection: 'column', fontSize: '12px'}}>
+            <button
+                className={props.muted ? "toggledRed" : ""}
+                onClick={props.onClick}
+                style={{width: '30px', height: '30px'}}
+            >
+            </button>
+            MUTE
+        </div>
+    )
 }
