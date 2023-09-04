@@ -4,6 +4,7 @@ import './App.css'
 import { getToken } from './filebrowser'
 import { floatToTimestring } from './util'
 import { Channel } from './components/Channel.tsx'
+import { Transport } from './components/Transport.tsx'
 import { AudioSystem, ChannelController } from './audio'
 
 const FOLDER_NAME = '230827_095441';
@@ -84,41 +85,13 @@ function App() {
         return () => { };
     }, []);
 
-
-
-    if (!tracks) {
+    if (!tracks || !audioSystem) {
         return <span>Loading...</span>;
     }
 
     const channels = tracks.map(track =>
         <Channel controller={track.controller} name={track.name} key={track.name}/>
     );
-
-    const play = function() {
-        if (!audioSystem)
-            return;
-        audioSystem.resume();
-        audioSystem.update({ velocity: 1 })
-    }
-
-    const pause = function() {
-        if (!audioSystem)
-            return;
-        audioSystem.update({ velocity: 0 })
-    }
-
-    const stop = function() {
-        if (!audioSystem)
-            return;
-        audioSystem.update({ position: 0, velocity: 0 })
-    }
-
-    const skipRelative = function(deltaSeconds: number) {
-        if (!audioSystem)
-            return;
-        const { position } = audioSystem.query();
-        audioSystem.update({ position: position + deltaSeconds });
-    };
 
     return (
         <div>
@@ -128,17 +101,7 @@ function App() {
                     <br />
                     <span id="playbackPosition"></span>
                 </div>
-                <div>
-                    <button onClick={() => skipRelative(-600) }>&minus;10m</button>
-                    <button onClick={() => skipRelative(-60) }>&minus;1m</button>
-                    <button onClick={() => skipRelative(-5) }>⏪</button>
-                    <button onClick={() => play()}>⏵</button>
-                    <button onClick={() => pause()}>⏸</button>
-                    <button onClick={() => stop()}>⏹</button>
-                    <button onClick={() => skipRelative(5) }>⏩</button>
-                    <button onClick={() => skipRelative(60) }>+1m</button>
-                    <button onClick={() => skipRelative(600) }>+10m</button>
-                </div>
+                <Transport audioSystem={audioSystem} />
             </div>
 
             <div className="channels">
