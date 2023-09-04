@@ -34,11 +34,19 @@ export type SimpleChannelController = {
 export class AudioSystem {
     audioContext: AudioContext;
     timingObject: ITimingObject;
+    masterGainNode: GainNode;
+    masterMuteNode: GainNode;
 
     constructor() {
         console.log("[audio] Creating new AudioSystem");
         this.timingObject = new TimingObject();
         this.audioContext = new AudioContext();
+
+        this.masterGainNode = this.audioContext.createGain();
+        this.masterMuteNode = this.audioContext.createGain();
+
+        this.masterGainNode.connect(this.masterMuteNode);
+        this.masterMuteNode.connect(this.audioContext.destination);
     }
 
     makeAudio (url: string, name: string): ChannelController {
@@ -84,7 +92,7 @@ export class AudioSystem {
 
         // gainNode.connect(this.audioContext.destination); // TODO - eq bypass
 
-        const eqController = this.makeEqChain(muteNode, this.audioContext.destination);
+        const eqController = this.makeEqChain(muteNode, this.masterGainNode);
         return {
             setGain: g => gainNode.gain.value = g,
             setMute: m => muteNode.gain.value = m ? 0 : 1,
@@ -95,8 +103,8 @@ export class AudioSystem {
 
     getMasterChannelController(): SimpleChannelController {
         return {
-            setGain: (_g: number) => {},
-            setMute: (_m: boolean) => {}
+            setGain: (g: number) => this.masterGainNode.gain.value = g,
+            setMute: (m: boolean) => this.masterMuteNode.gain.value = m ? 0 : 1,
         }
     }
 
