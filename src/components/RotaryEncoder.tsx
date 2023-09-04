@@ -18,9 +18,11 @@ export function RotaryEncoder(props: PropsWithChildren<RotaryEncoderProps>) {
         
         const delta = 0.05;
 
+        const minVal = zeroAtCenter ? -1 : 0;
+
         if (e.deltaY < 0 && props.value < 1) {
             props.setValue(props.value + delta);
-        } else if (e.deltaY > 0 && props.value > -1) {
+        } else if (e.deltaY > 0 && props.value > minVal) { // TODO make sure it never gets below minVal
             props.setValue(props.value - delta);
         }       
     }, [props.value]);
