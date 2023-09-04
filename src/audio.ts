@@ -25,6 +25,12 @@ export type ChannelController = EqController & {
     setGain: (gain: number) => void;
 }
 
+// FX and master
+export type SimpleChannelController = {
+    setMute: (mute: boolean) => void;
+    setGain: (gain: number) => void;
+}
+
 export class AudioSystem {
     audioContext: AudioContext;
     timingObject: ITimingObject;
@@ -85,6 +91,20 @@ export class AudioSystem {
             setEqBypass: _eqBypass => {return;}, // TODO implement
             ...eqController
         };
+    }
+
+    getMasterChannelController(): SimpleChannelController {
+        return {
+            setGain: (_g: number) => {},
+            setMute: (_m: boolean) => {}
+        }
+    }
+
+    getFxChannelController(): SimpleChannelController {
+        return {
+            setGain: (_g: number) => {},
+            setMute: (_m: boolean) => {}
+        }
     }
 
     private makeEqChain(sourceNode: AudioNode, destNode: AudioNode): EqController {

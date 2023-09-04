@@ -3,6 +3,7 @@ import { useCallback, ChangeEvent } from 'react'
 export type FaderProps = {
     value: number,
     setValue: (v: number) => void,
+    color?: "none" | "red" | "blue";
 }
 
 export function Fader(props: FaderProps) {
@@ -11,8 +12,11 @@ export function Fader(props: FaderProps) {
         props.setValue(vol);
     }, [props.setValue]);
 
+
+    const className = "fader" + (props.color ? (" " + props.color) : "");
+
     return (
-        <div className="fader">
+        <div className={className}>
             <input type="range" value={props.value} onChange={onChange}></input>
         </div>
     );

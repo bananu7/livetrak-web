@@ -1,42 +1,37 @@
 import { useState, useCallback } from 'react'
-import { ChannelStrip } from './ChannelStrip.tsx'
-import { ChannelController } from '../audio'
 import { Fader } from './Fader'
 import { MuteButton } from './MuteButton'
 import { Meter } from './Meter'
+import { SimpleChannelController } from '../audio'
 
-export type ChannelProps = {
-    controller: ChannelController,
-    name: string,
+export type MasterChannelProps = {
+    controller: SimpleChannelController,
 }
 
-export function Channel(props: ChannelProps) {
+export function MasterChannel(props: MasterChannelProps) {
     const [muted, setMuted] = useState(false);
     const [volume, setVolumeState] = useState(100);
-
     const muteClick = useCallback(() => {
         setMuted(m => {
             props.controller.setMute(!m);
             return(!m)
         });
     }, [props.controller.setMute]);
-
     const setVolume = useCallback((vol: number) => {
         setVolumeState(vol);
         props.controller.setGain(vol / 100);
     }, [props.controller]);
 
+    const name = "MASTER";
+
     return (<div className="channel">
-        <ChannelStrip controller={props.controller} />
         <div>
             <MuteButton muted={muted} onClick={muteClick} />
         </div>
         <div style={{display: 'flex'}}>
-            <Fader setValue={setVolume} value={volume} />
-            <Meter name={props.name} />
+            <Fader setValue={setVolume} value={volume} color={"red"} />
+            <Meter name={name} />
         </div>
-        <span>{props.name}</span>
+        <span>{name}</span>
     </div>);
 }
-
-

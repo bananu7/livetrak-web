@@ -4,6 +4,8 @@ import './App.css'
 import { getToken } from './filebrowser'
 import { floatToTimestring } from './util'
 import { Channel } from './components/Channel.tsx'
+import { MasterChannel } from './components/MasterChannel.tsx'
+import { FxChannel } from './components/FxChannel.tsx'
 import { Transport } from './components/Transport.tsx'
 import { AudioSystem, ChannelController } from './audio'
 
@@ -93,6 +95,9 @@ function App() {
         <Channel controller={track.controller} name={track.name} key={track.name}/>
     );
 
+    const masterChannelController = audioSystem.getMasterChannelController();
+    const fxChannelController = audioSystem.getFxChannelController();
+
     return (
         <div>
             <div className="transport">
@@ -106,6 +111,8 @@ function App() {
 
             <div className="channels">
                 {channels}
+                <FxChannel controller={fxChannelController} />
+                <MasterChannel controller={masterChannelController} />
             </div>
         </div>
     );
