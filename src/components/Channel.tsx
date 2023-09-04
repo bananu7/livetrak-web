@@ -26,17 +26,21 @@ export function Channel(props: ChannelProps) {
         props.controller.setGain(vol / 100);
     }, [props.controller]);
 
-    return (<div className="channel">
-        <ChannelStrip controller={props.controller} />
-        <div>
-            <MuteButton muted={muted} onClick={muteClick} />
+    return (
+        <div className="channelWrapper">
+        <div className="channel">
+            <ChannelStrip controller={props.controller} />
+            <div style={{width: '100%'}}>
+                <MuteButton muted={muted} onClick={muteClick} />
+            </div>
+            <div style={{display: 'flex', marginLeft: '-10px'}}>
+                <Fader setValue={setVolume} value={volume} />
+                <Meter name={props.name} />
+            </div>
+            <span>{props.name}</span>
         </div>
-        <div style={{display: 'flex'}}>
-            <Fader setValue={setVolume} value={volume} />
-            <Meter name={props.name} />
         </div>
-        <span>{props.name}</span>
-    </div>);
+    );
 }
 
 

@@ -25,10 +25,11 @@ export function FxChannel(props: FxChannelProps) {
     const name = "FX";
 
     return (<div className="channel">
+        <div /> {/* filler */}
         <div>
             <MuteButton muted={muted} onClick={muteClick} />
         </div>
-        <div style={{display: 'flex'}}>
+        <div style={{display: 'flex', marginLeft: '-10px'}}>
             <Fader setValue={setVolume} value={volume} color={"blue"} />
             <Meter name={name} />
         </div>

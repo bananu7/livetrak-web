@@ -25,10 +25,11 @@ export function MasterChannel(props: MasterChannelProps) {
     const name = "MASTER";
 
     return (<div className="channel">
+        <div /> {/* filler */}
         <div>
             <MuteButton muted={muted} onClick={muteClick} />
         </div>
-        <div style={{display: 'flex'}}>
+        <div style={{display: 'flex', marginLeft: '-10px'}}>
             <Fader setValue={setVolume} value={volume} color={"red"} />
             <Meter name={name} />
         </div>
