@@ -16,34 +16,39 @@ export function ChannelStrip(props: ChannelStripProps) {
     const [lowCut, setLowCut] = useState(false);
     const [low, setLowState] = useState(0);
     const [mid, setMidState] = useState(0);
-    const [pan, setPan] = useState(0);
+    const [pan, setPanState] = useState(0);
 
     const eqBypassToggle = useCallback(() => {
         const bypass = !eqBypass;
         props.controller.setEqBypass(bypass);
         setEqBypass(bypass);
-    }, [eqBypass, props.controller.setEqBypass]);
+    }, [eqBypass, props.controller]);
 
     const lowCutToggle = useCallback(() => {
         const cut = !lowCut;
         props.controller.setLowCutEnabled(cut);
         setLowCut(cut);
-    }, [lowCut, props.controller.setLowCutEnabled]);
+    }, [lowCut, props.controller]);
 
     const setHigh = useCallback((g: number) => {
         setHighState(g);
         props.controller.setHighGain(g * EQ_DB_RANGE);
-    }, [props.controller.setHighGain]);
+    }, [props.controller]);
 
     const setMid = useCallback((g: number) => {
         setMidState(g);
         props.controller.setMidGain(g * EQ_DB_RANGE);
-    }, [props.controller.setHighGain]);
+    }, [props.controller]);
 
     const setLow = useCallback((g: number) => {
         setLowState(g);
         props.controller.setLowGain(g * EQ_DB_RANGE);
-    }, [props.controller.setHighGain]);
+    }, [props.controller]);
+
+    const setPan = useCallback((p: number) => {
+        setPanState(p);
+        props.controller.setPan(p);
+    }, [props.controller]);
 
     // short-circuit if bypass is enabled
     if (eqBypass) {

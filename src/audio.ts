@@ -16,6 +16,7 @@ export type EqController = {
     setMidGain: (midGain: number) => void;
     // setMidFrequency: (freq: number) => void
     setHighGain: (highGain: number) => void;
+    setPan: (pan: number) => void;
 }
 
 export type ChannelController = EqController & {
@@ -105,11 +106,15 @@ export class AudioSystem {
         high.frequency.value = 10000;
         high.gain.value = 0;
 
+
+        const panNode = this.audioContext.createStereoPanner();
+
         sourceNode.connect(lowCut);
         lowCut.connect(high);
         high.connect(low);
         low.connect(mid);
-        mid.connect(destNode);
+        mid.connect(panNode);
+        panNode.connect(destNode);
 
         return {
             setLowCutEnabled: e => lowCut.frequency.value = e ? 75 : 0,
@@ -117,6 +122,7 @@ export class AudioSystem {
             setMidGain: g => mid.gain.value = g,
             // setMidFrequency: (freq: number) => void
             setHighGain: g => high.gain.value = g,
+            setPan: p => panNode.pan.value = p,
         }
     }
 
@@ -132,4 +138,3 @@ export class AudioSystem {
         return this.timingObject.query();
     }
 }
-
