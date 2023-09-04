@@ -73,8 +73,8 @@
   flex-direction: row;
   gap: '5px';
   width: 900px;
-  height: 700px;
-  background-color: #444;
+  height: 730px;
+  background: linear-gradient(0deg, #3c3c3c 0%, #444 100%);
 
   padding-left: 10px;
   padding-right: 10px;
@@ -88,8 +88,7 @@
   width: 100px;
   height: 700px;
   box-sizing: border-box;
-
-  background: linear-gradient(0deg, #3c3c3c 0%, #444 100%);
+  background: none;
   /*overflow: hidden;*/
 
   border-collapse: collapse;
