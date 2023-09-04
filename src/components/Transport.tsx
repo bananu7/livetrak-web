@@ -30,7 +30,12 @@ export function Transport(props: TransportProps) {
         if (!audioSystem)
             return;
         const { position } = audioSystem.query();
-        audioSystem.update({ position: position + deltaSeconds });
+
+        let newPosition = position + deltaSeconds;
+        if (newPosition < 0)
+            newPosition = 0;
+
+        audioSystem.update({ position: newPosition });
     }, [audioSystem]);
 
     return (
