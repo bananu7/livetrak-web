@@ -26,7 +26,7 @@ export function MasterChannel(props: MasterChannelProps) {
 
     return (<div className="channel">
         <div /> {/* filler */}
-        <div>
+        <div style={{width: '100%'}}>
             <MuteButton muted={muted} onClick={muteClick} />
         </div>
         <div style={{display: 'flex', marginLeft: '-10px'}}>

@@ -26,7 +26,7 @@ export function FxChannel(props: FxChannelProps) {
 
     return (<div className="channel">
         <div /> {/* filler */}
-        <div>
+        <div style={{width: '100%'}}>
             <MuteButton muted={muted} onClick={muteClick} />
         </div>
         <div style={{display: 'flex', marginLeft: '-10px'}}>
