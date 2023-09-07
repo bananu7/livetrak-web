@@ -7,6 +7,7 @@ import { Channel } from './components/Channel.tsx'
 import { MasterChannel } from './components/MasterChannel.tsx'
 import { FxChannel } from './components/FxChannel.tsx'
 import { Transport } from './components/Transport.tsx'
+import { FolderList } from './components/FolderList.tsx'
 import { AudioSystem, ChannelController } from './audio'
 
 const FOLDER_NAME = '230827_095441';
@@ -30,6 +31,7 @@ function App() {
     }
 
     const [tracks, setTracks] = useState<Track[]|null>(null);
+    const [token, setToken] = useState<string|null>(null);
 
     const setup = async () => {
         if (alreadySetup) {
@@ -39,7 +41,7 @@ function App() {
         audioSystem = new AudioSystem();
 
         const token = await getToken();
-        console.log(token);
+        setToken(token);
 
         const trackList = [
             { url: 'TRACK01.m4a', name: "OHL" },
@@ -87,6 +89,10 @@ function App() {
         return () => { };
     }, []);
 
+    if (!token) {
+        return <span>Getting token...</span>;
+    }
+
     if (!tracks || !audioSystem) {
         return <span>Loading...</span>;
     }
@@ -100,6 +106,7 @@ function App() {
 
     return (
         <div>
+            <FolderList token={token} />
             <div className="transport">
                 <div className="screen">
                     <span className="inverted">{FOLDER_NAME}</span>
