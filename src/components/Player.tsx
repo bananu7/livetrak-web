@@ -59,7 +59,9 @@ export function Player(props: PlayerProps) {
         updatePlaybackPosition();
 
         // TODO cleanup
-        return () => { };
+        return () => {
+            props.audioSystem.clear();
+        };
     }, [props.folder, props.token, props.audioSystem]);
 
     if (!tracks) {
