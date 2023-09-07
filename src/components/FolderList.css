@@ -1,18 +1,24 @@
 ul {
-    max-height: 600px;
     min-width: 600px;
-    overflow-y: scroll;
 
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    padding: 5px;
+    gap: 10px;
+
+    background-color: #0E395E;
+    box-shadow: 0px 0px 10px 10px rgba(0,0,0,0.3);;
+    padding: 50px;
+    border-radius: 3px;
 }
 
 li {
+    color: rgba(255, 255, 255, 0.87);
     list-style-type: none;
-    background-color: #074f82;
-    border-radius: 10px;
+    background-color: #1A67AB;
+    border-radius: 3px;
     padding: 10px;
     cursor: pointer;
+    text-align: left;
+
+    box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.3);
 }

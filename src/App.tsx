@@ -41,7 +41,14 @@ function App() {
     }
 
     if (!folder) {
-        return (<FolderList token={token} pickFolder={setFolder} />);
+        return (
+            <div>
+                <h1>livetrak-web</h1>
+                <h2>Pick a folder:</h2>
+                <FolderList token={token} pickFolder={setFolder} />
+                <span>Made with ❤️ by <a href="https://github.com/bananu7/livetrak-web">@bananu7</a></span>
+            </div>
+        );
     } else {
         return (<Player token={token} audioSystem={audioSystem} folder={folder} />);
     }

@@ -10,7 +10,17 @@ export type FolderListProps = {
 export function FolderList(props: FolderListProps) {
     const [dirs, setDirs] = useState<Directory[]>([]);
     const fetchDirs = async () => {
-        setDirs(await getDirectories(props.token));
+        const dirs = await getDirectories(props.token);
+        dirs.sort((a,b) => {
+            if (a.name > b.name) {
+                return -1;
+            }
+            if (b.name > a.name) {
+                return 1;
+            }
+            return 0;
+        });
+        setDirs(dirs);
     };
 
     useEffect(() => {
