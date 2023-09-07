@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 
-import { getToken } from './filebrowser'
+import { getToken, makeUrl } from './filebrowser'
 import { floatToTimestring } from './util'
 import { Channel } from './components/Channel.tsx'
 import { MasterChannel } from './components/MasterChannel.tsx'
@@ -11,14 +11,6 @@ import { FolderList } from './components/FolderList.tsx'
 import { AudioSystem, ChannelController } from './audio'
 
 const FOLDER_NAME = '230827_095441';
-
-const makeUrl = function(name: string, token: string) {
-    const path = `https://home.banachewicz.pl/filebrowser/api/raw/${FOLDER_NAME}/`;
-    const auth = `auth=${token}`;
-    const inline = 'inline=true';
-
-    return `${path}${name}?${auth}&${inline}`;
-}
 
 // TODO sound was created twice in debug mode, prolly need to clean up?
 let alreadySetup = false;
@@ -56,7 +48,7 @@ function App() {
         ];
 
         const trackListWithAuth = trackList.map(track => {
-            return { url: makeUrl(track.url, token), name: track.name };
+            return { url: makeUrl(FOLDER_NAME, track.url, token), name: track.name };
         });
 
         const tracks = trackListWithAuth.map(t => {

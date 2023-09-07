@@ -24,6 +24,14 @@ export async function getToken(): Promise<string> {
     }
 }
 
+export function makeUrl(folder: string, name: string, token: string) {
+    const path = `https://home.banachewicz.pl/filebrowser/api/raw/${folder}/`;
+    const auth = `auth=${token}`;
+    const inline = 'inline=true';
+
+    return `${path}${name}?${auth}&${inline}`;
+}
+
 export type Directory = {
     name: string,
 }
