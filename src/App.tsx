@@ -12,7 +12,7 @@ let audioSystem : AudioSystem|null = null;
 
 function App() {
     const [token, setToken] = useState<string|null>(null);
-    const [folder, _setFolder] = useState<string|null>(null);
+    const [folder, setFolder] = useState<string|null>(null);
 
     const setup = async () => {
         if (alreadySetup) {
@@ -41,7 +41,7 @@ function App() {
     }
 
     if (!folder) {
-        return (<FolderList token={token} />);
+        return (<FolderList token={token} pickFolder={setFolder} />);
     } else {
         return (<Player token={token} audioSystem={audioSystem} folder={folder} />);
     }

@@ -52,7 +52,7 @@ export function Player(props: PlayerProps) {
         });
 
         const tracks = trackListWithAuth.map(t => {
-            return { controller: props.audioSystem!.makeAudio(t.url, t.name), name: t.name };
+            return { controller: props.audioSystem.makeAudio(t.url, t.name), name: t.name };
         });
         setTracks(tracks);
 

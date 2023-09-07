@@ -46,7 +46,6 @@ export async function getDirectories(token: string): Promise<Directory[]> {
             }
         });
         const json = await response.json();
-        console.log(json);
         return json.items.map((i: any) => ({ name: i.name }));
     } catch (error) {
         console.error('Error in getDirectories:', error);

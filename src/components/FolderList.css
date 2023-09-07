@@ -1,0 +1,18 @@
+ul {
+    max-height: 600px;
+    min-width: 600px;
+    overflow-y: scroll;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+}
+
+li {
+    list-style-type: none;
+    background-color: #074f82;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
