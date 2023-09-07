@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getDirectories, Directory } from '../filebrowser'
+import { getDirectoryContents, File } from '../filebrowser'
 import './FolderList.css'
 
 export type FolderListProps = {
@@ -8,9 +8,9 @@ export type FolderListProps = {
 }
 
 export function FolderList(props: FolderListProps) {
-    const [dirs, setDirs] = useState<Directory[]>([]);
+    const [dirs, setDirs] = useState<File[]>([]);
     const fetchDirs = async () => {
-        const dirs = await getDirectories(props.token);
+        const dirs = (await getDirectoryContents(props.token)).filter(d => d.isDir);
         dirs.sort((a,b) => {
             if (a.name > b.name) {
                 return -1;

@@ -32,11 +32,19 @@ export function makeUrl(folder: string, name: string, token: string) {
     return `${path}${name}?${auth}&${inline}`;
 }
 
-export type Directory = {
+export type File = {
+    path: string,
     name: string,
+    size: number,
+    extension: string,
+    modified: string, // UTC timestamp
+    mode: number,
+    isDir: boolean,
+    isSymlink: boolean,
+    type: string,
 }
 
-export async function getDirectories(token: string): Promise<Directory[]> {
+export async function getDirectoryContents(token: string): Promise<File[]> {
     try {
         const url = `${FILEBROWSER_URL_ROOT}api/resources/?auth=${token}`;
         const response = await fetch(url, {
@@ -46,7 +54,7 @@ export async function getDirectories(token: string): Promise<Directory[]> {
             }
         });
         const json = await response.json();
-        return json.items.map((i: any) => ({ name: i.name }));
+        return json.items;
     } catch (error) {
         console.error('Error in getDirectories:', error);
         throw error;
