@@ -20,5 +20,13 @@ li {
     cursor: pointer;
     text-align: left;
 
+    border: 1px solid transparent;
+    box-sizing: border-box;
+
     box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.3);
+}
+
+li:hover {
+    border: 1px solid #76a4cd;
+    box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
 }

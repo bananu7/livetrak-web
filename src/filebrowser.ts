@@ -56,7 +56,26 @@ export async function getDirectoryContents(token: string): Promise<File[]> {
         const json = await response.json();
         return json.items;
     } catch (error) {
-        console.error('Error in getDirectories:', error);
+        console.error('Error in getDirectoryContents:', error);
+        throw error;
+    }
+}
+
+export async function getJsonFile(token: string, path: string, name: string): Promise<Any|null> {
+    try {
+        const url = `${FILEBROWSER_URL_ROOT}api/raw/${path}/${name}?auth=${token}`;
+        const response = await fetch(url, {
+            method: 'GET',
+        });
+
+        if (response.status !== 200) {
+            return null;
+        }
+
+        const json = await response.json();
+        return json;
+    } catch (error) {
+        console.error('Error in getFile:', error);
         throw error;
     }
 }

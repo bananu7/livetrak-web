@@ -5,7 +5,7 @@ import { FxChannel } from './FxChannel.tsx'
 import { Transport } from './Transport.tsx'
 
 import { AudioSystem, ChannelController } from '../audio'
-import { makeUrl } from '../filebrowser'
+import { makeUrl, getJsonFile } from '../filebrowser'
 import { floatToTimestring } from '../util'
 
 export type PlayerProps = {
@@ -18,6 +18,18 @@ type Track = {
     controller: ChannelController,
     name: string,
 }
+
+const DEFAULT_TRACK_LIST = [
+    { url: 'TRACK01.m4a', name: "OHL" },
+    { url: 'TRACK02.m4a', name: "OHR" },
+    { url: 'TRACK03.m4a', name: "ST" },
+    { url: 'TRACK04.m4a', name: "Git B" },
+    { url: 'TRACK05.m4a', name: "Git Ł" },
+    { url: 'TRACK06.m4a', name: "Bas K" },
+    { url: 'TRACK07.m4a', name: "Bas A" },
+    { url: 'TRACK08.m4a', name: "V" },
+    { url: 'TRACK09_10.m4a', name: "Keys" },
+];
 
 export function Player(props: PlayerProps) {
     const [tracks, setTracks] = useState<Track[]|null>(null);
@@ -34,18 +46,11 @@ export function Player(props: PlayerProps) {
         requestAnimationFrame(updatePlaybackPosition);
     }, [props.audioSystem]);
 
-    useEffect(() => {
-        const trackList = [
-            { url: 'TRACK01.m4a', name: "OHL" },
-            { url: 'TRACK02.m4a', name: "OHR" },
-            { url: 'TRACK03.m4a', name: "ST" },
-            { url: 'TRACK04.m4a', name: "Git B" },
-            { url: 'TRACK05.m4a', name: "Git Ł" },
-            { url: 'TRACK06.m4a', name: "Bas K" },
-            { url: 'TRACK07.m4a', name: "Bas A" },
-            { url: 'TRACK08.m4a', name: "V" },
-            { url: 'TRACK09_10.m4a', name: "Keys" },
-        ];
+    const setup = async () => {
+        const trackListInFolder = await getJsonFile(props.token, props.folder, 'tracks.json');
+
+        // no tracklist on the server, use default one
+        const trackList = trackListInFolder ?? DEFAULT_TRACK_LIST;
 
         const trackListWithAuth = trackList.map(track => {
             return { url: makeUrl(props.folder, track.url, props.token), name: track.name };
@@ -57,6 +62,10 @@ export function Player(props: PlayerProps) {
         setTracks(tracks);
 
         updatePlaybackPosition();
+    }
+
+    useEffect(() => {
+        setup();
 
         // TODO cleanup
         return () => {
