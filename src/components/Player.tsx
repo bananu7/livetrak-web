@@ -19,6 +19,8 @@ type Track = {
     name: string,
 }
 
+type TrackMeta = { url: string, name: string }
+
 const DEFAULT_TRACK_LIST = [
     { url: 'TRACK01.m4a', name: "OHL" },
     { url: 'TRACK02.m4a', name: "OHR" },
@@ -52,11 +54,11 @@ export function Player(props: PlayerProps) {
         // no tracklist on the server, use default one
         const trackList = trackListInFolder ?? DEFAULT_TRACK_LIST;
 
-        const trackListWithAuth = trackList.map(track => {
+        const trackListWithAuth = trackList.map((track: TrackMeta) => {
             return { url: makeUrl(props.folder, track.url, props.token), name: track.name };
         });
 
-        const tracks = trackListWithAuth.map(t => {
+        const tracks = trackListWithAuth.map((t: TrackMeta) => {
             return { controller: props.audioSystem.makeAudio(t.url, t.name), name: t.name };
         });
         setTracks(tracks);

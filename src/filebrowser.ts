@@ -61,7 +61,7 @@ export async function getDirectoryContents(token: string): Promise<File[]> {
     }
 }
 
-export async function getJsonFile(token: string, path: string, name: string): Promise<Any|null> {
+export async function getJsonFile(token: string, path: string, name: string): Promise<any|null> {
     try {
         const url = `${FILEBROWSER_URL_ROOT}api/raw/${path}/${name}?auth=${token}`;
         const response = await fetch(url, {
