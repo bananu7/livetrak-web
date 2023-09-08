@@ -31,16 +31,23 @@ export type SimpleChannelController = {
     setGain: (gain: number) => void;
 }
 
+type Audio = {
+    element: HTMLMediaElement,
+    nodes: AudioNode[],
+}
+
 export class AudioSystem {
     audioContext: AudioContext;
     timingObject: ITimingObject;
     masterGainNode: GainNode;
     masterMuteNode: GainNode;
+    audios: Audio[];
 
     constructor() {
         console.log("[audio] Creating new AudioSystem");
         this.timingObject = new TimingObject();
         this.audioContext = new AudioContext();
+        this.audios = [];
 
         this.masterGainNode = this.audioContext.createGain();
         this.masterMuteNode = this.audioContext.createGain();
@@ -92,13 +99,28 @@ export class AudioSystem {
 
         // gainNode.connect(this.audioContext.destination); // TODO - eq bypass
 
-        const eqController = this.makeEqChain(muteNode, this.masterGainNode);
+        const [eqController, eqNodes] = this.makeEqChain(muteNode, this.masterGainNode);
+
+        this.audios.push({
+            element: elem,
+            nodes: [node, gainNode, muteNode, analyser, ...eqNodes],
+        })
+
         return {
             setGain: g => gainNode.gain.value = g,
             setMute: m => muteNode.gain.value = m ? 0 : 1,
             setEqBypass: _eqBypass => {return;}, // TODO implement
             ...eqController
         };
+    }
+
+    clear() {
+        this.audios.forEach(a => this.clearAudio(a));
+    }
+
+    clearAudio(audio: Audio) {
+        document.body.removeChild(audio.element);
+        audio.nodes.forEach(n => n.disconnect());
     }
 
     getMasterChannelController(): SimpleChannelController {
@@ -115,7 +137,7 @@ export class AudioSystem {
         }
     }
 
-    private makeEqChain(sourceNode: AudioNode, destNode: AudioNode): EqController {
+    private makeEqChain(sourceNode: AudioNode, destNode: AudioNode): [EqController, AudioNode[]] {
         const lowCut = this.audioContext.createBiquadFilter();
         lowCut.type = 'highpass';
         lowCut.frequency.value = 75;
@@ -144,14 +166,18 @@ export class AudioSystem {
         mid.connect(panNode);
         panNode.connect(destNode);
 
-        return {
+        const ctrl: EqController = {
             setLowCutEnabled: e => lowCut.frequency.value = e ? 75 : 0,
             setLowGain: g => low.gain.value = g,
             setMidGain: g => mid.gain.value = g,
             // setMidFrequency: (freq: number) => void
             setHighGain: g => high.gain.value = g,
             setPan: p => panNode.pan.value = p,
-        }
+        };
+
+        const nodes = [lowCut, low, mid, high, panNode];
+
+        return [ctrl, nodes];
     }
 
     resume() {
