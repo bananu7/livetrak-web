@@ -10,7 +10,7 @@ export type FxChannelProps = {
 
 export function FxChannel(props: FxChannelProps) {
     const [muted, setMuted] = useState(false);
-    const [volume, setVolumeState] = useState(0);
+    const [volume, setVolumeState] = useState(100);
     const muteClick = useCallback(() => {
         setMuted(m => {
             props.controller.setMute(!m);

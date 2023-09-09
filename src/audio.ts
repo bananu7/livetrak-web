@@ -133,6 +133,8 @@ export class AudioSystem {
         const analyser = this.createAnalyser(name);
 
         gainNode.gain.value = 1.0;
+        fxGainNode.gain.value = 0.0;
+
         node.connect(gainNode);
         node.connect(analyser); // TOOD this could be pre-fader or post-fader
         gainNode.connect(muteNode);
