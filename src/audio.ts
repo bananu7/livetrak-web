@@ -144,9 +144,9 @@ export class AudioSystem {
         fxGainNode.gain.value = 0.0;
 
         node.connect(gainNode);
-        node.connect(analyser); // TODO this could be pre-fader or post-fader
         gainNode.connect(muteNode);
         muteNode.connect(fxGainNode);
+        muteNode.connect(analyser); // PFL
         fxGainNode.connect(this.fxMasterGainNode);
         // muteNode.connect(this.audioContext.destination); // TODO - eq bypass
 
