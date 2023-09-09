@@ -41,7 +41,10 @@ export class AudioSystem {
     audioContext: AudioContext;
     timingObject: ITimingObject;
     masterGainNode: GainNode;
-    masterMuteNode: GainNode;
+    masterMuteNode: GainNode
+    fxMasterGainNode: GainNode;
+    fxMasterMuteNode: GainNode;
+
     audios: Audio[];
     reverb: AdvancedReverb;
 
@@ -53,30 +56,22 @@ export class AudioSystem {
 
         this.masterGainNode = this.audioContext.createGain();
         this.masterMuteNode = this.audioContext.createGain();
+        this.fxMasterGainNode = this.audioContext.createGain();
+        this.fxMasterMuteNode = this.audioContext.createGain();
+
+        this.fxMasterMuteNode.connect(this.masterGainNode);
+        // The effect is actually past fxMasterGain because it's the same regardless
+        // of the order of (gain, mute, reverb).
+        this.reverb = createReverb(this.audioContext, this.fxMasterGainNode, this.fxMasterMuteNode);
 
         this.masterGainNode.connect(this.masterMuteNode);
         this.masterMuteNode.connect(this.audioContext.destination);
-
-        this.reverb = createReverb(this.audioContext, this.masterGainNode, this.audioContext.destination);
     }
 
-    makeAudio (url: string, name: string): ChannelController {
-        const elem = document.createElement('audio');
-        elem.src = url;
-        elem.style.cssText = "visibility: hidden;";
-        elem.muted = false;
-        elem.volume = 1.0;
-        elem.crossOrigin = "anonymous";
-        document.body.appendChild(elem);
-
-        setTimingsrc(elem, this.timingObject);
-
-        /* add measurement node for lights */
-        const node = this.audioContext.createMediaElementSource(elem);
-        const gainNode = this.audioContext.createGain();
-        const muteNode = this.audioContext.createGain();
+    private createAnalyser(name: string) {
         const analyser = this.audioContext.createAnalyser();
 
+        /* measurement node */
         const bufferLength = analyser.frequencyBinCount;
         const dataArray = new Uint8Array(bufferLength);
         function calculateVolume() {
@@ -96,18 +91,61 @@ export class AudioSystem {
         }
         calculateVolume();
 
+        return analyser;
+    }
+
+    makeAudio (url: string, name: string): ChannelController {
+        const elem = document.createElement('audio');
+        elem.src = url;
+        elem.style.cssText = "visibility: hidden;";
+        elem.muted = false;
+        elem.volume = 1.0;
+        elem.crossOrigin = "anonymous";
+        document.body.appendChild(elem);
+
+        setTimingsrc(elem, this.timingObject);
+
+        
+        // L-12 routing notes from reddit:
+        /*
+        TL;DR EFX are driven globally from individual channels' volumes in the MASTER mix
+        - if you have a channel at -∞ on the master, you cannot get reverbs from it in any monitor mix.
+
+        When this line of mixers was first released, sending FX to the individual monitor mixes was impossible
+        - just flat out not included. They added this ability later down the line in a firmware update,
+        but a holdover from that seems to be that FX relies on what's sent to the master channel.
+        This behavior is pre-fader for the master as well--you can mute the actual red master fader
+        and the reverb is still sent to the rest of the device.
+        */
+
+        // TODO confirm with physical unit that the FX are indeed post-fader on master.
+
+        /*
+            node --> gainNode -> muteNode --> EQ -> masterGain -> masterMute               ----> output
+                 \                        \-> fxGain -> fxMasterGain -> [reverb] -> fxMute --/
+                  \-> analyser 
+        */
+
+        const node = this.audioContext.createMediaElementSource(elem);
+        const gainNode = this.audioContext.createGain();
+        const fxGainNode = this.audioContext.createGain();
+        const muteNode = this.audioContext.createGain();
+        const analyser = this.createAnalyser(name);
+
         gainNode.gain.value = 1.0;
         node.connect(gainNode);
         node.connect(analyser); // TOOD this could be pre-fader or post-fader
         gainNode.connect(muteNode);
-
-        // gainNode.connect(this.audioContext.destination); // TODO - eq bypass
+        muteNode.connect(fxGainNode);
+        fxGainNode.connect(this.fxMasterGainNode);
+        // muteNode.connect(this.audioContext.destination); // TODO - eq bypass
 
         const [eqController, eqNodes] = this.makeEqChain(muteNode, this.masterGainNode);
 
+        // for cleanup
         this.audios.push({
             element: elem,
-            nodes: [node, gainNode, muteNode, analyser, ...eqNodes],
+            nodes: [node, gainNode, muteNode, analyser, fxGainNode, ...eqNodes],
         })
 
         return {
@@ -136,8 +174,8 @@ export class AudioSystem {
 
     getFxChannelController(): SimpleChannelController {
         return {
-            setGain: (_g: number) => {},
-            setMute: (_m: boolean) => {}
+            setGain: (g: number) => this.fxMasterGainNode.gain.value = g,
+            setMute: (m: boolean) => this.fxMasterMuteNode.gain.value = m ? 0 : 1,
         }
     }
 
