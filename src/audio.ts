@@ -23,6 +23,7 @@ export type EqController = {
 export type ChannelController = EqController & {
     setMute: (mute: boolean) => void;
     setEqBypass: (bypassEq: boolean) => void;
+    setFxSend: (fxSend: number) => void;
     setGain: (gain: number) => void;
 }
 
@@ -66,6 +67,11 @@ export class AudioSystem {
 
         this.masterGainNode.connect(this.masterMuteNode);
         this.masterMuteNode.connect(this.audioContext.destination);
+
+        const fxAnalyser = this.createAnalyser('FX');
+        const masterAnalyser = this.createAnalyser('MASTER');
+        this.masterMuteNode.connect(masterAnalyser);
+        this.fxMasterMuteNode.connect(fxAnalyser);
     }
 
     private createAnalyser(name: string) {
@@ -138,7 +144,7 @@ export class AudioSystem {
         fxGainNode.gain.value = 0.0;
 
         node.connect(gainNode);
-        node.connect(analyser); // TOOD this could be pre-fader or post-fader
+        node.connect(analyser); // TODO this could be pre-fader or post-fader
         gainNode.connect(muteNode);
         muteNode.connect(fxGainNode);
         fxGainNode.connect(this.fxMasterGainNode);
@@ -147,6 +153,7 @@ export class AudioSystem {
         const [eqController, eqNodes] = this.makeEqChain(muteNode, this.masterGainNode);
 
         // for cleanup
+        // TODO: cleanup analyser update functions
         this.audios.push({
             element: elem,
             nodes: [node, gainNode, muteNode, analyser, fxGainNode, ...eqNodes],
@@ -155,6 +162,7 @@ export class AudioSystem {
         return {
             setGain: g => gainNode.gain.value = g,
             setMute: m => muteNode.gain.value = m ? 0 : 1,
+            setFxSend: f => fxGainNode.gain.value = f,
             setEqBypass: _eqBypass => {return;}, // TODO implement
             ...eqController
         };
