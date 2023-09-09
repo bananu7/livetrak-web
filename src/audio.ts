@@ -103,6 +103,8 @@ export class AudioSystem {
         elem.crossOrigin = "anonymous";
         document.body.appendChild(elem);
 
+        console.log("adding audio element ", name)
+
         setTimingsrc(elem, this.timingObject);
 
         
@@ -159,11 +161,13 @@ export class AudioSystem {
     }
 
     clear() {
+        console.log(`Clearing audio with ${this.audios.length} entries`);
         this.audios.forEach(a => this.clearAudio(a));
     }
 
     clearAudio(audio: Audio) {
         document.body.removeChild(audio.element);
+        console.log("removing audio element")
         audio.nodes.forEach(n => n.disconnect());
     }
 
