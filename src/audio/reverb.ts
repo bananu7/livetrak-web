@@ -76,12 +76,12 @@ export class AdvancedReverb {
               }
         const tailOsc = new Noise(tailContext, 1);
 
-        const tailHPF = this.audioContext.createBiquadFilter();
+        const tailHPF = tailContext.createBiquadFilter();
         tailHPF.type = "highpass";
         tailHPF.frequency.value = 500;
         tailHPF.Q.value = 0.1;
 
-        const tailLPF = this.audioContext.createBiquadFilter();
+        const tailLPF = tailContext.createBiquadFilter();
         tailLPF.type = "lowpass";
         tailLPF.frequency.value = 2000;
         tailLPF.Q.value = 0.2;
@@ -109,4 +109,6 @@ export function createReverb(audioContext: AudioContext, input: AudioNode, outpu
        
     input.connect(verb.input);
     verb.output.connect(output);
+
+    return verb;
 }
