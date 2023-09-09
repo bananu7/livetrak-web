@@ -1,5 +1,6 @@
 import { TimingObject, ITimingObject } from 'timing-object';
 import { setTimingsrc } from 'timingsrc';
+import { AdvancedReverb } from './audio/reverb';
 
 export type AudioCommand = {
     position?: number;
@@ -42,6 +43,7 @@ export class AudioSystem {
     masterGainNode: GainNode;
     masterMuteNode: GainNode;
     audios: Audio[];
+    reverb: AdvancedReverb;
 
     constructor() {
         console.log("[audio] Creating new AudioSystem");
@@ -54,6 +56,8 @@ export class AudioSystem {
 
         this.masterGainNode.connect(this.masterMuteNode);
         this.masterMuteNode.connect(this.audioContext.destination);
+
+        this.reverb = new AdvancedReverb(this.audioContext);
     }
 
     makeAudio (url: string, name: string): ChannelController {

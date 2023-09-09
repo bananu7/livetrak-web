@@ -75,28 +75,21 @@ export class AdvancedReverb {
                 this.effect.buffer = buffer.renderedBuffer;
               }
         const tailOsc = new Noise(tailContext, 1);
-        // todo
-        //const tailLPFilter = new Filter(tailContext, "lowpass", 2000, 0.2);
-        //const tailHPFilter = new Filter(tailContext, "highpass", 500, 0.1);
 
-        /*
-            constructor (context, type = "lowpass", cutoff = 1000, resonance = 0.9) {
-                super(context);
-                this.name = "filter";
-                this.effect.frequency.value = cutoff;
-                this.effect.Q.value = resonance;
-                this.effect.type = type;
-            }
+        const tailHPF = this.audioContext.createBiquadFilter();
+        tailHPF.type = "highpass";
+        tailHPF.frequency.value = 500;
+        tailHPF.Q.value = 0.1;
 
-            setup() {
-                this.effect = this.context.createBiquadFilter();
-                this.effect.connect(this.output);
-        */
+        const tailLPF = this.audioContext.createBiquadFilter();
+        tailLPF.type = "lowpass";
+        tailLPF.frequency.value = 2000;
+        tailLPF.Q.value = 0.2;
 
         tailOsc.init();
-        //tailOsc.connect(tailHPFilter.input);
-        //tailHPFilter.connect(tailLPFilter.input);
-        //tailLPFilter.connect(tailContext.destination);
+        tailOsc.connect(tailHPF);
+        tailHPF.connect(tailLPF);
+        tailLPF.connect(tailContext.destination);
         tailOsc.attack = attack;
         tailOsc.decay = decay;
         tailOsc.release = release;
