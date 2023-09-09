@@ -11,7 +11,7 @@ const EQ_DB_RANGE = 15;
 export function ChannelStrip(props: ChannelStripProps) {
     // TODO probably shouldn't store that here
     const [eqBypass, setEqBypass] = useState(false);
-    const [fx, setFx] = useState(0);
+    const [fx, setFxState] = useState(0);
     const [high, setHighState] = useState(0);
     const [lowCut, setLowCut] = useState(false);
     const [low, setLowState] = useState(0);
@@ -48,6 +48,11 @@ export function ChannelStrip(props: ChannelStripProps) {
     const setPan = useCallback((p: number) => {
         setPanState(p);
         props.controller.setPan(p);
+    }, [props.controller]);
+
+    const setFx = useCallback((f: number) => {
+        setFxState(f);
+        props.controller.setFxSend(f);
     }, [props.controller]);
 
     // short-circuit if bypass is enabled

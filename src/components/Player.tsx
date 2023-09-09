@@ -66,13 +66,16 @@ export function Player(props: PlayerProps) {
         updatePlaybackPosition();
     }
 
+    const cleanup = async (wait: Promise<void>) => {
+        await wait;
+        props.audioSystem.clear();
+    }
+
     useEffect(() => {
-        setup();
+        const setupEnded = setup();
 
         // TODO cleanup
-        return () => {
-            props.audioSystem.clear();
-        };
+        return () => { cleanup(setupEnded); };
     }, [props.folder, props.token, props.audioSystem]);
 
     if (!tracks) {
