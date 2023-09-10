@@ -37,17 +37,9 @@ export function AudioChannel(props: AudioProps) {
         ? <Channel controller={controller} name={props.name} status={status}/>
         : null;
 
-    const onSeeking = useCallback(() => {
-        setStatus('warning');
-    });
-
-    const onSeeked = useCallback(() => {
-        setStatus('ok');
-    });
-
-    const onStalled = useCallback(() => {
-        setStatus('error');
-    });
+    const setStatusOk = useCallback(() => { setStatus('ok'); });
+    const setStatusWarning = useCallback(() => {setStatus('warning');});
+    const setStatusError = useCallback(() => { setStatus('error'); });
 
     return (
         <div>
@@ -58,9 +50,12 @@ export function AudioChannel(props: AudioProps) {
                 muted={false}
                 crossOrigin="anonymous"
 
-                onSeeking={onSeeking}
-                onSeeked={onSeeked}
-                onStalled={onStalled}
+                onLoadStart={setStatusWarning}
+                onCanPlayThrough={setStatusOk}
+                onSeeking={setStatusWarning}
+                onSeeked={setStatusOk}
+                onStalled={setStatusError}
+                onWaiting={setStatusWarning}
             />
             {channel}
         </div>
