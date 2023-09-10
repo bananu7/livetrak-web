@@ -37,9 +37,9 @@ export function AudioChannel(props: AudioProps) {
         ? <Channel controller={controller} name={props.name} status={status}/>
         : null;
 
-    const setStatusOk = useCallback(() => { setStatus('ok'); });
-    const setStatusWarning = useCallback(() => {setStatus('warning');});
-    const setStatusError = useCallback(() => { setStatus('error'); });
+    const setStatusOk = useCallback(() => { setStatus('ok'); }, []);
+    const setStatusWarning = useCallback(() => {setStatus('warning'); }, []);
+    const setStatusError = useCallback(() => { setStatus('error'); }, []);
 
     return (
         <div>
