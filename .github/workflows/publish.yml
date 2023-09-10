@@ -31,7 +31,4 @@ jobs:
         with:
           context: ./
           push: true
-          tags:
-            - ${{ secrets.DOCKERHUB_USERNAME }}/livetrak-web:latest
-            - ${{ secrets.DOCKERHUB_USERNAME }}/livetrak-web:${{ steps.vars.outputs.sha_short }}
-            - ${{ secrets.DOCKERHUB_USERNAME }}/livetrak-web:${{ github.ref_name }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/livetrak-web:latest, ${{ secrets.DOCKERHUB_USERNAME }}/livetrak-web:${{ steps.vars.outputs.sha_short }}, ${{ secrets.DOCKERHUB_USERNAME }}/livetrak-web:${{ github.ref_name }}
