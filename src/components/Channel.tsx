@@ -36,7 +36,7 @@ export function Channel(props: ChannelProps) {
         <div className="channelWrapper">
         <div className="channel">
             <ChannelStrip controller={props.controller} />
-            <div className={"recPlayWrapper"}><button className={statusClass}/>ERR/PLAY</div>
+            <div className={"recPlayWrapper"}><button className={statusClass}/>ERR / PLAY</div>
             <div style={{width: '100%'}}>
                 <MuteButton muted={muted} onClick={muteClick} />
             </div>
