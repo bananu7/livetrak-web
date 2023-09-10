@@ -36,6 +36,7 @@ export type SimpleChannelController = {
 type Audio = {
     element: HTMLMediaElement,
     nodes: AudioNode[],
+    deleter: () => void,
 }
 
 export class AudioSystem {
@@ -107,11 +108,20 @@ export class AudioSystem {
         elem.muted = false;
         elem.volume = 1.0;
         elem.crossOrigin = "anonymous";
+
+        elem.addEventListener('seeking', _event => {
+            console.log('media element seeking');
+        });
+
+        elem.addEventListener('seeked', _event => {
+            console.log('media element seeked');
+        });
+
         document.body.appendChild(elem);
 
         console.log("adding audio element ", name)
 
-        setTimingsrc(elem, this.timingObject);
+        const deleteTimingsrc = setTimingsrc(elem, this.timingObject);
 
         
         // L-12 routing notes from reddit:
@@ -157,6 +167,7 @@ export class AudioSystem {
         this.audios.push({
             element: elem,
             nodes: [node, gainNode, muteNode, analyser, fxGainNode, ...eqNodes],
+            deleter: deleteTimingsrc,
         })
 
         return {
@@ -176,6 +187,7 @@ export class AudioSystem {
     clearAudio(audio: Audio) {
         document.body.removeChild(audio.element);
         console.log("removing audio element")
+        audio.deleter();
         audio.nodes.forEach(n => n.disconnect());
     }
 
