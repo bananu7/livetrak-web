@@ -33,11 +33,7 @@ export type SimpleChannelController = {
     setGain: (gain: number) => void;
 }
 
-type Audio = {
-    element: HTMLMediaElement,
-    nodes: AudioNode[],
-    deleter: () => void,
-}
+export type Deleter = () => void;
 
 export class AudioSystem {
     audioContext: AudioContext;
@@ -47,14 +43,12 @@ export class AudioSystem {
     fxMasterGainNode: GainNode;
     fxMasterMuteNode: GainNode;
 
-    audios: Audio[];
     reverb: AdvancedReverb;
 
     constructor() {
         console.log("[audio] Creating new AudioSystem");
         this.timingObject = new TimingObject();
         this.audioContext = new AudioContext();
-        this.audios = [];
 
         this.masterGainNode = this.audioContext.createGain();
         this.masterMuteNode = this.audioContext.createGain();
@@ -101,28 +95,9 @@ export class AudioSystem {
         return analyser;
     }
 
-    makeAudio (url: string, name: string): ChannelController {
-        const elem = document.createElement('audio');
-        elem.src = url;
-        elem.style.cssText = "visibility: hidden;";
-        elem.muted = false;
-        elem.volume = 1.0;
-        elem.crossOrigin = "anonymous";
-
-        elem.addEventListener('seeking', _event => {
-            console.log('media element seeking');
-        });
-
-        elem.addEventListener('seeked', _event => {
-            console.log('media element seeked');
-        });
-
-        document.body.appendChild(elem);
-
-        console.log("adding audio element ", name)
-
+    makeAudio (elem: HTMLAudioElement, name: string): [ChannelController, Deleter] {
+        console.log(`[audio] Making audio ${name}`);
         const deleteTimingsrc = setTimingsrc(elem, this.timingObject);
-
         
         // L-12 routing notes from reddit:
         /*
@@ -144,7 +119,11 @@ export class AudioSystem {
                   \-> analyser 
         */
 
-        const node = this.audioContext.createMediaElementSource(elem);
+        // This shenanigan is necessary as only one MediaElementSource can exist for a given node
+        // but we can reuse the existing one if already present.
+        const node = (elem as any).node ? (elem as any).node : this.audioContext.createMediaElementSource(elem);
+        (elem as any).node = node;
+
         const gainNode = this.audioContext.createGain();
         const fxGainNode = this.audioContext.createGain();
         const muteNode = this.audioContext.createGain();
@@ -162,33 +141,23 @@ export class AudioSystem {
 
         const [eqController, eqNodes] = this.makeEqChain(muteNode, this.masterGainNode);
 
-        // for cleanup
-        // TODO: cleanup analyser update functions
-        this.audios.push({
-            element: elem,
-            nodes: [node, gainNode, muteNode, analyser, fxGainNode, ...eqNodes],
-            deleter: deleteTimingsrc,
-        })
+        // TODO analyser cleanup
+        const deleter = () => {
+            console.log(`[audio] Deleting audio ${name}`);
+            const nodes = [node, gainNode, muteNode, analyser, fxGainNode, ...eqNodes];
+            nodes.forEach(n => n.disconnect());
+            deleteTimingsrc();
+        };
 
-        return {
+        const controller: ChannelController = {
             setGain: g => gainNode.gain.value = g,
             setMute: m => muteNode.gain.value = m ? 0 : 1,
             setFxSend: f => fxGainNode.gain.value = f,
             setEqBypass: _eqBypass => {return;}, // TODO implement
             ...eqController
         };
-    }
 
-    clear() {
-        console.log(`Clearing audio with ${this.audios.length} entries`);
-        this.audios.forEach(a => this.clearAudio(a));
-    }
-
-    clearAudio(audio: Audio) {
-        document.body.removeChild(audio.element);
-        console.log("removing audio element")
-        audio.deleter();
-        audio.nodes.forEach(n => n.disconnect());
+        return [controller, deleter];
     }
 
     getMasterChannelController(): SimpleChannelController {
