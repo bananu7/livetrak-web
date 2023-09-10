@@ -4,10 +4,14 @@ import { ChannelController } from '../audio'
 import { Fader } from './Fader'
 import { MuteButton } from './MuteButton'
 import { Meter } from './Meter'
+import './Channel.css'
+
+export type AudioStatus = "ok" | "warning" | "error";
 
 export type ChannelProps = {
     controller: ChannelController,
     name: string,
+    status: AudioStatus,
 }
 
 export function Channel(props: ChannelProps) {
@@ -26,10 +30,13 @@ export function Channel(props: ChannelProps) {
         props.controller.setGain(vol / 100);
     }, [props.controller]);
 
+    const statusClass = {'ok':'toggledGreen', 'warning':'toggledYellow', 'error':'toggledRed'}[props.status];
+
     return (
         <div className="channelWrapper">
         <div className="channel">
             <ChannelStrip controller={props.controller} />
+            <div className={"recPlayWrapper"}><button className={statusClass}/>ERR / PLAY</div>
             <div style={{width: '100%'}}>
                 <MuteButton muted={muted} onClick={muteClick} />
             </div>

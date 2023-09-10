@@ -1,0 +1,154 @@
+.channel {
+  display: grid;
+  grid-auto-flow: column;
+  justify-items: center;
+  gap: 20px;
+
+  grid-template-rows:270px 50px 50px 300px 100px;
+
+  width: 100px;
+  height: 750px;
+  box-sizing: border-box;
+  background: none;
+  /*overflow: hidden;*/
+
+  border-collapse: collapse;
+  padding-top: 10px
+  user-select: none;
+  border-left: 1px solid #999;
+  border-right: 1px solid #999;
+}
+
+.channel .fader {
+  height: 300px;
+  width: 65px;
+}
+
+.channel input[type=range] {
+  display: block;
+  appearance: none;
+  transform: rotateZ(270deg);
+  transform-origin: center center;
+  margin-top: 120px;
+  margin-left: -120px;
+  margin-right: 0;
+  width: 300px;
+  height: 60px;
+
+  background: transparent;
+  cursor: pointer;
+}
+
+.channel input[type="range"]::-webkit-slider-runnable-track {
+  background-color: black;
+  border-radius: 0.5rem;
+  height: 0.5rem;
+}
+
+.channel input[type="range"]::-moz-range-track {
+  background-color: black;
+  border-radius: 0.5rem;
+  height: 0.5rem;
+}
+
+.channel input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+}
+
+.channel input[type="range"]::-moz-range-thumb {
+  border: none; /*Removes extra border that FF applies*/
+  border-radius: 3px;
+}
+
+.channel input[type=range]::-webkit-slider-thumb {
+  background: linear-gradient(90deg, #111 0%, #444 10%, #ccc 15%, #444 49%, #ddd 49%, #ddd 51%, #444 51%, #222 87%, #444 87%, #ccc 100%);
+  border: 1px solid black;
+  border-radius: 3px;
+  filter: drop-shadow(-5px 5px 4px #222);
+  height: 40px;
+  width: 80px;
+  margin-top: -17px;
+}
+
+.channel input[type=range]::-moz-range-thumb  {
+  background: linear-gradient(90deg, #111 0%, #444 10%, #ccc 15%, #444 49%, #ddd 49%, #ddd 51%, #444 51%, #222 87%, #444 87%, #ccc 100%);
+  border: 1px solid black;
+  border-radius: 3px;
+  filter: drop-shadow(-5px 5px 4px #222);
+  height: 40px;
+  width: 80px;
+  margin-top: -17px;
+}
+
+.channel .red input[type=range]::-webkit-slider-thumb {
+  background: linear-gradient(90deg, #200 0%, #400 10%, #c00 15%, #400 49%, #ddd 49%, #ddd 51%, #400 51%, #200 87%, #400 87%, #c00 100%);
+}
+
+.channel .red input[type=range]::-moz-range-thumb {
+  background: linear-gradient(90deg, #200 0%, #400 10%, #c00 15%, #400 49%, #ddd 49%, #ddd 51%, #400 51%, #200 87%, #400 87%, #c00 100%);
+}
+
+.channel .blue input[type=range]::-webkit-slider-thumb {
+  background: linear-gradient(90deg, #002 0%, #114 10%, #33e 15%, #114 49%, #ddd 49%, #ddd 51%, #116 51%, #002 87%, #114 87%, #33e 100%);
+}
+
+.channel .blue input[type=range]::-moz-range-thumb  {
+  background: linear-gradient(90deg, #002 0%, #114 10%, #33e 15%, #114 49%, #ddd 49%, #ddd 51%, #116 51%, #002 87%, #114 87%, #33e 100%);
+}
+
+.channel .meterWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2px;
+  background-color: #222;
+  border-radius: 3px;
+  height: 100%;
+}
+
+/* For all soft-looking buttons */
+.channel button {
+    font-size: 10px;
+    display: block;
+    background-color: #999;
+    border: 3px solid #333;
+    color: black;
+    box-shadow: 1px 4px 6px 0px rgba(0, 0, 0, 0.15);
+}
+
+/* red lamp-like */
+.channel button.toggledRed {
+    border-color: #6e3243;
+    background: radial-gradient(circle, #e3a8b1 0%, #a85160 100%);
+    filter: drop-shadow(0px 0px 5px #a85160 );
+}
+
+/* yellow lamp-like */
+.channel button.toggledYellow, .channel button.toggled {
+    border-color: #6e410e;
+    background: radial-gradient(circle, rgba(251,235,63,1) 0%, rgba(252,166,70,1) 100%);
+    filter: drop-shadow(0px 0px 5px rgba(252,166,70,1) );
+}
+
+.channel button.toggledGreen {
+    border-color: #628820;
+    background: radial-gradient(circle, #a4e236 0%, #94cb31 100%);
+    filter: drop-shadow(0px 0px 5px #a4e236 );
+}
+
+.recPlayWrapper {
+    background-color: #111;
+    font-size: 12px;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.recPlayWrapper button {
+    width: 27px;
+    height: 27px;
+}

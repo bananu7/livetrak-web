@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Channel } from './Channel.tsx'
+import { AudioChannel } from './AudioChannel.tsx'
 import { MasterChannel } from './MasterChannel.tsx'
 import { FxChannel } from './FxChannel.tsx'
 import { Transport } from './Transport.tsx'
 
-import { AudioSystem, ChannelController } from '../audio'
+import { AudioSystem } from '../audio'
 import { makeUrl, getJsonFile } from '../filebrowser'
 import { floatToTimestring } from '../util'
 
@@ -12,11 +12,6 @@ export type PlayerProps = {
     token: string,
     audioSystem: AudioSystem,
     folder: string,
-}
-
-type Track = {
-    controller: ChannelController,
-    name: string,
 }
 
 type TrackMeta = { url: string, name: string }
@@ -34,7 +29,7 @@ const DEFAULT_TRACK_LIST = [
 ];
 
 export function Player(props: PlayerProps) {
-    const [tracks, setTracks] = useState<Track[]|null>(null);
+    const [tracks, setTracks] = useState<TrackMeta[]|null>(null);
 
     const updatePlaybackPosition = useCallback(() => {
         const playbackPos = document.getElementById('playbackPosition');
@@ -57,40 +52,36 @@ export function Player(props: PlayerProps) {
         const trackListWithAuth = trackList.map((track: TrackMeta) => {
             return { url: makeUrl(props.folder, track.url, props.token), name: track.name };
         });
-
-        const tracks = trackListWithAuth.map((t: TrackMeta) => {
-            return { controller: props.audioSystem.makeAudio(t.url, t.name), name: t.name };
-        });
-        setTracks(tracks);
+        setTracks(trackListWithAuth);
 
         updatePlaybackPosition();
     }
 
-    const cleanup = async (wait: Promise<void>) => {
-        await wait;
-        props.audioSystem.clear();
-    }
-
     useEffect(() => {
-        const setupEnded = setup();
+        setup();
 
-        // TODO cleanup
-        return () => { cleanup(setupEnded); };
+        return () => { };
     }, [props.folder, props.token, props.audioSystem]);
 
     if (!tracks) {
         return <span>Loading tracks...</span>;
     }
 
-    const channels = tracks.map(track =>
-        <Channel controller={track.controller} name={track.name} key={track.name}/>
+    const channels = tracks.map((t: TrackMeta) => 
+        <AudioChannel audioSystem={props.audioSystem} name={t.name} url={t.url} key={t.name} />
     );
 
     const masterChannelController = props.audioSystem.getMasterChannelController();
     const fxChannelController = props.audioSystem.getFxChannelController();
 
     return (
-        <div>
+        <div className="player">
+            <div className="channels">
+                {channels}
+                <FxChannel controller={fxChannelController} />
+                <MasterChannel controller={masterChannelController} />
+            </div>
+
             <div className="transport">
                 <div className="screen">
                     <span className="inverted">{props.folder}</span>
@@ -98,12 +89,6 @@ export function Player(props: PlayerProps) {
                     <span id="playbackPosition"></span>
                 </div>
                 <Transport audioSystem={props.audioSystem} />
-            </div>
-
-            <div className="channels">
-                {channels}
-                <FxChannel controller={fxChannelController} />
-                <MasterChannel controller={masterChannelController} />
             </div>
         </div>
     );
