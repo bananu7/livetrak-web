@@ -2,10 +2,10 @@ name: Publish
 
 on:
   push:
-    tags:        
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+    tags: 'v[0-9]+.[0-9]+.[0-9]+'
 
-publish:
+jobs:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
