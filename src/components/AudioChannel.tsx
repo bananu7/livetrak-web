@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react'
-import { Channel } from './Channel'
+import { Channel, AudioStatus } from './Channel'
 import { AudioSystem, ChannelController } from '../audio'
 
 export type AudioProps = {
@@ -23,30 +23,31 @@ htmlElement.addEventListener('stalled', _event => {
 });*/
 
 export function AudioChannel(props: AudioProps) {
+    const [status, setStatus] = useState<AudioStatus>('warning');
     const audioRef = useRef<HTMLAudioElement>();
     const deleterRef = useRef<() => void>();
     const [controller, setController] = useState<ChannelController|null>(null);
 
     const audioCreated = useCallback((htmlElement: HTMLAudioElement) => {
         if (audioRef.current && deleterRef.current) {
-            console.log("deleting audio")
             setController(null);
             deleterRef.current();
+            setStatus('warning');
         }
 
         audioRef.current = htmlElement;
 
         if (htmlElement) {
-            console.log("making audio")
             const [ctrl, deleter] = props.audioSystem.makeAudio(htmlElement, props.name);
             setController(ctrl);
+            setStatus('ok');
             deleterRef.current = deleter;
         }
     }, [props.audioSystem, props.url, props.name]);
 
-    const channel = controller ? 
-        <Channel controller={controller} name={props.name}/> :
-        null;
+    const channel = controller
+        ? <Channel controller={controller} name={props.name} status={status}/>
+        : null;
 
     return (
         <div>
