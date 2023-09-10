@@ -1,4 +1,4 @@
-import { useCallback, ChangeEvent } from 'react'
+import { useCallback, ChangeEvent, WheelEvent } from 'react'
 
 export type FaderProps = {
     value: number,
