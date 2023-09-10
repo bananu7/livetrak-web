@@ -9,18 +9,6 @@ export type AudioProps = {
 }
 
 // TODO add via react :)
-/*
-htmlElement.addEventListener('seeking', _event => {
-    console.log('media element seeking');
-});
-
-htmlElement.addEventListener('seeked', _event => {
-    console.log('media element seeked');
-});
-
-htmlElement.addEventListener('stalled', _event => {
-    console.warn('media element stalled');
-});*/
 
 export function AudioChannel(props: AudioProps) {
     const [status, setStatus] = useState<AudioStatus>('warning');
@@ -49,6 +37,18 @@ export function AudioChannel(props: AudioProps) {
         ? <Channel controller={controller} name={props.name} status={status}/>
         : null;
 
+    const onSeeking = useCallback(() => {
+        setStatus('warning');
+    });
+
+    const onSeeked = useCallback(() => {
+        setStatus('ok');
+    });
+
+    const onStalled = useCallback(() => {
+        setStatus('error');
+    });
+
     return (
         <div>
             <audio
@@ -57,6 +57,10 @@ export function AudioChannel(props: AudioProps) {
                 style={{visibility: 'hidden'}}
                 muted={false}
                 crossOrigin="anonymous"
+
+                onSeeking={onSeeking}
+                onSeeked={onSeeked}
+                onStalled={onStalled}
             />
             {channel}
         </div>
