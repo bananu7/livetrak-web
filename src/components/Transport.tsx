@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { AudioSystem } from '../audio'
+import './Transport.css'
 
 export type TransportProps = {
     audioSystem: AudioSystem,
@@ -39,7 +40,7 @@ export function Transport(props: TransportProps) {
     }, [audioSystem]);
 
     return (
-        <div>
+        <div className="transportControls">
             <button onClick={() => skipRelative(-600) }>&minus;10m</button>
             <button onClick={() => skipRelative(-60) }>&minus;1m</button>
             <button onClick={() => skipRelative(-5) }>⏪</button>

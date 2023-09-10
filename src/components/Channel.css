@@ -1,0 +1,15 @@
+.recPlayWrapper {
+	background-color: black;
+	font-size: 12px;
+	height: 50px;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.recPlayWrapper button {
+	width: 27px;
+	height: 27px;
+}

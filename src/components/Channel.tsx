@@ -4,6 +4,7 @@ import { ChannelController } from '../audio'
 import { Fader } from './Fader'
 import { MuteButton } from './MuteButton'
 import { Meter } from './Meter'
+import './Channel.css'
 
 export type ChannelProps = {
     controller: ChannelController,
@@ -30,6 +31,7 @@ export function Channel(props: ChannelProps) {
         <div className="channelWrapper">
         <div className="channel">
             <ChannelStrip controller={props.controller} />
+            <div className="recPlayWrapper"><button />ERR/PLAY</div>
             <div style={{width: '100%'}}>
                 <MuteButton muted={muted} onClick={muteClick} />
             </div>
