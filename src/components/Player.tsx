@@ -111,7 +111,10 @@ export function Player(props: PlayerProps) {
                 </div>
             </div>
 
-            <Timeline markers={markers}/>
+            <Timeline
+                markers={markers}
+                setProjectTime={(t) => props.audioSystem.update({ position: t})}
+            />
         </div>
     );
 }

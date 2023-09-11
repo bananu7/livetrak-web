@@ -4,12 +4,13 @@ import './Timeline.css'
 
 export type TimelineProps = {
     markers: ProjectTimeSeconds[],
+    setProjectTime: (time: ProjectTimeSeconds) => void,
 }
 
 export function Timeline(props: TimelineProps) {
     let i = 0;
     const markers = props.markers.map(m => {
-        const click = () => console.log(m);
+        const click = () => props.setProjectTime(m);
         return (<Marker time={m} key={i++} onClick={click} />);
     });
     return(<div className="timeline">
@@ -42,7 +43,7 @@ export type MarkerTooltipProps = {
     time: ProjectTimeSeconds,
 }
 
-function formatProjectTime(time: PropsWithChildren<ProjectTimeSeconds>) {
+function formatProjectTime(time: ProjectTimeSeconds) {
     const hours = Math.floor(time / 3600);
     time -= hours * 3600;
     const minutes = Math.floor(time / 60);
@@ -50,7 +51,7 @@ function formatProjectTime(time: PropsWithChildren<ProjectTimeSeconds>) {
     return `${hours}:${minutes}:${Math.floor(time)}`;
 }
 
-export function MarkerTooltip(props: MarkerTooltipProps) {
+export function MarkerTooltip(props: PropsWithChildren<MarkerTooltipProps>) {
     return (
         <div className="tooltip">
             <h1>{props.name}</h1>
