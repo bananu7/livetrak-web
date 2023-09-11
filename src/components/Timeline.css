@@ -1,0 +1,9 @@
+.timeline {
+    width: 100%;
+    height: 200px;
+    position: relative;
+
+    background: linear-gradient(0deg, #111 0%, #111 49%, #aaa 49%, #aaa 51%, #111 51%, #111 100%);
+    border-radius: 3px;
+    border: 1px solid #aaa;
+}

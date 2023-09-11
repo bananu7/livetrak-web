@@ -11,7 +11,7 @@ export type ProjectTime = {
 }
 
 export function zoomMarkerToTime(marker: ZoomMarker): ProjectTime {
-    const allSeconds = marker / 44100;
+    const allSeconds = marker / 44100; // TODO read actual sample rate?
     const hours = Math.floor(allSeconds / 3600);
     const allSecondsWithoutHours = allSeconds - hours * 3600;
 

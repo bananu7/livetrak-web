@@ -3,12 +3,13 @@ import { AudioChannel } from './AudioChannel.tsx'
 import { MasterChannel } from './MasterChannel.tsx'
 import { FxChannel } from './FxChannel.tsx'
 import { Transport } from './Transport.tsx'
+import { Timeline } from './Timeline.tsx'
 
 import { AudioSystem } from '../audio'
 import { makeUrl, getJsonFile, getFile } from '../filebrowser'
 import { floatToTimestring } from '../util'
 
-import { ZoomProjectData, binaryZdtToProjectData, zoomMarkerToTime } from '../zoom/zoom_l12.ts'
+import { ZoomProjectData, binaryZdtToProjectData, zoomMarkerToTime, ProjectTime } from '../zoom/zoom_l12.ts'
 
 export type PlayerProps = {
     token: string,
@@ -42,6 +43,7 @@ async function getZoomProjectData(token: string, folder: string): Promise<ZoomPr
 
 export function Player(props: PlayerProps) {
     const [tracks, setTracks] = useState<TrackMeta[]|null>(null);
+    const [markers, setMarkers] = useState<ProjectTime[]>([]);
 
     const updatePlaybackPosition = useCallback(() => {
         const playbackPos = document.getElementById('playbackPosition');
@@ -58,9 +60,7 @@ export function Player(props: PlayerProps) {
     const setup = async () => {
         const trackListInFolder = await getJsonFile(props.token, props.folder, 'tracks.json');
         const zoomProjectData = await getZoomProjectData(props.token, props.folder);
-        for (const m of zoomProjectData.markers) {
-            console.log(zoomMarkerToTime(m));
-        }
+        setMarkers(zoomProjectData.markers.map(zoomMarkerToTime));
 
         // no tracklist on the server, use default one
         const trackList = trackListInFolder ?? DEFAULT_TRACK_LIST;
@@ -106,6 +106,8 @@ export function Player(props: PlayerProps) {
                 </div>
                 <Transport audioSystem={props.audioSystem} />
             </div>
+
+            <Timeline markers={markers}/>
         </div>
     );
 }
