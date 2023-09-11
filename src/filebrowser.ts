@@ -61,7 +61,7 @@ export async function getDirectoryContents(token: string): Promise<File[]> {
     }
 }
 
-export async function getJsonFile(token: string, path: string, name: string): Promise<any|null> {
+export async function getFile(token: string, path: string, name: string): Promise<any|null> {
     try {
         const url = `${FILEBROWSER_URL_ROOT}api/raw/${path}/${name}?auth=${token}`;
         const response = await fetch(url, {
@@ -72,6 +72,17 @@ export async function getJsonFile(token: string, path: string, name: string): Pr
             return null;
         }
 
+        return response;
+    } catch (error) {
+        console.error('Error in getFile:', error);
+        throw error;
+    }
+}
+
+
+export async function getJsonFile(token: string, path: string, name: string): Promise<any|null> {
+    try {
+        const response = await getFile(token, path, name);
         const json = await response.json();
         return json;
     } catch (error) {

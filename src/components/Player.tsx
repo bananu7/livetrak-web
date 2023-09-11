@@ -5,8 +5,10 @@ import { FxChannel } from './FxChannel.tsx'
 import { Transport } from './Transport.tsx'
 
 import { AudioSystem } from '../audio'
-import { makeUrl, getJsonFile } from '../filebrowser'
+import { makeUrl, getJsonFile, getFile } from '../filebrowser'
 import { floatToTimestring } from '../util'
+
+import { ZoomProjectData, binaryZdtToProjectData, zoomMarkerToTime } from '../zoom/zoom_l12.ts'
 
 export type PlayerProps = {
     token: string,
@@ -28,6 +30,16 @@ const DEFAULT_TRACK_LIST = [
     { url: 'TRACK09_10.m4a', name: "Keys" },
 ];
 
+async function getZoomProjectData(token: string, folder: string): Promise<ZoomProjectData> {
+    const zoomProjectDataFetch = await getFile(token, folder, 'PRJDATA.ZDT');
+    const blob = await zoomProjectDataFetch.blob();
+    const buffer = await blob.arrayBuffer();
+    const view = new DataView(buffer);
+
+    const data = binaryZdtToProjectData(view);
+    return data;
+}
+
 export function Player(props: PlayerProps) {
     const [tracks, setTracks] = useState<TrackMeta[]|null>(null);
 
@@ -45,6 +57,10 @@ export function Player(props: PlayerProps) {
 
     const setup = async () => {
         const trackListInFolder = await getJsonFile(props.token, props.folder, 'tracks.json');
+        const zoomProjectData = await getZoomProjectData(props.token, props.folder);
+        for (const m of zoomProjectData.markers) {
+            console.log(zoomMarkerToTime(m));
+        }
 
         // no tracklist on the server, use default one
         const trackList = trackListInFolder ?? DEFAULT_TRACK_LIST;
@@ -67,7 +83,7 @@ export function Player(props: PlayerProps) {
         return <span>Loading tracks...</span>;
     }
 
-    const channels = tracks.map((t: TrackMeta) => 
+    const channels = tracks.map((t: TrackMeta) =>
         <AudioChannel audioSystem={props.audioSystem} name={t.name} url={t.url} key={t.name} />
     );
 
