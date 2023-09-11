@@ -26,18 +26,10 @@ export function Marker(props: MarkerProps) {
     const secondsSinceStart = props.time.hours * 3600 + props.time.minutes * 60 + props.time.seconds;
 
     const style: CSSProperties = {
-        position: 'absolute',
         left: secondsSinceStart / 7200 * 100 + '%', // 2h max
-        top: '50%',
-        backgroundColor: '#4ec144',
-        border: '3px solid #276122',
-        boxSizing: 'border-box',
-        width: '30px',
-        height: '30px',
-        borderRadius: '15px',
-        cursor: 'pointer',
-    }
+    };
+
     return (
-        <div style={style} onClick={props.onClick}></div>
+        <div className="marker" style={style} onClick={props.onClick}></div>
     )
 }

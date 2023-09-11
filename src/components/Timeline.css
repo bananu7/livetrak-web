@@ -7,3 +7,19 @@
     border-radius: 3px;
     border: 1px solid #aaa;
 }
+
+.marker {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    
+    top: calc(50% - 15px);
+
+    border-radius: 15px;
+
+    background-color: #4ec144;
+    border: 3px solid #276122;
+    box-sizing: border-box;
+
+    cursor: pointer;
+}

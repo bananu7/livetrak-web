@@ -92,19 +92,21 @@ export function Player(props: PlayerProps) {
 
     return (
         <div className="player">
-            <div className="channels">
-                {channels}
-                <FxChannel controller={fxChannelController} />
-                <MasterChannel controller={masterChannelController} />
-            </div>
-
-            <div className="transport">
-                <div className="screen">
-                    <span className="inverted">{props.folder}</span>
-                    <br />
-                    <span id="playbackPosition"></span>
+            <div style={{display:'flex'}}>
+                <div className="channels">
+                    {channels}
+                    <FxChannel controller={fxChannelController} />
+                    <MasterChannel controller={masterChannelController} />
                 </div>
-                <Transport audioSystem={props.audioSystem} />
+
+                <div className="transport">
+                    <div className="screen">
+                        <span className="inverted">{props.folder}</span>
+                        <br />
+                        <span id="playbackPosition"></span>
+                    </div>
+                    <Transport audioSystem={props.audioSystem} />
+                </div>
             </div>
 
             <Timeline markers={markers}/>
