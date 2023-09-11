@@ -9,7 +9,9 @@ import { AudioSystem } from '../audio'
 import { makeUrl, getJsonFile, getFile } from '../filebrowser'
 import { floatToTimestring } from '../util'
 
-import { ZoomProjectData, binaryZdtToProjectData, zoomMarkerToTime, ProjectTime } from '../zoom/zoom_l12.ts'
+import './Player.css'
+
+import { ZoomProjectData, binaryZdtToProjectData, zoomMarkerToTime, ProjectTimeSeconds } from '../zoom/zoom_l12.ts'
 
 export type PlayerProps = {
     token: string,
@@ -43,7 +45,7 @@ async function getZoomProjectData(token: string, folder: string): Promise<ZoomPr
 
 export function Player(props: PlayerProps) {
     const [tracks, setTracks] = useState<TrackMeta[]|null>(null);
-    const [markers, setMarkers] = useState<ProjectTime[]>([]);
+    const [markers, setMarkers] = useState<ProjectTimeSeconds[]>([]);
 
     const updatePlaybackPosition = useCallback(() => {
         const playbackPos = document.getElementById('playbackPosition');

@@ -4,25 +4,11 @@ export type ZoomProjectData = {
 
 export type ZoomMarker = number;
 
-export type ProjectTime = {
-    hours: number,
-    minutes: number;
-    seconds: number;
-}
+export type ProjectTimeSeconds = number;
 
-export function zoomMarkerToTime(marker: ZoomMarker): ProjectTime {
-    const allSeconds = marker / 44100; // TODO read actual sample rate?
-    const hours = Math.floor(allSeconds / 3600);
-    const allSecondsWithoutHours = allSeconds - hours * 3600;
-
-    const minutes = Math.floor(allSecondsWithoutHours / 60);
-    const allSecondsLeft = allSecondsWithoutHours - minutes * 60
-
-    return {
-        hours,
-        minutes,
-        seconds: allSecondsLeft
-    }
+export function zoomMarkerToTime(marker: ZoomMarker): ProjectTimeSeconds {
+    const seconds = marker / 44100; // TODO read actual sample rate?
+    return seconds;
 }
 
 export function binaryZdtToProjectData(view: DataView): ZoomProjectData {

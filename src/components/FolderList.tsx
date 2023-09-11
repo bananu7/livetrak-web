@@ -32,7 +32,7 @@ export function FolderList(props: FolderListProps) {
     );
 
     return (
-        <ul>
+        <ul className="folderList">
             {dirlis}
         </ul>
     );

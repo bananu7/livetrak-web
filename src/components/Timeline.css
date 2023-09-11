@@ -1,6 +1,6 @@
 .timeline {
     width: 100%;
-    height: 200px;
+    height: 100px;
     position: relative;
 
     background: linear-gradient(0deg, #111 0%, #111 49%, #aaa 49%, #aaa 51%, #111 51%, #111 100%);
@@ -22,4 +22,34 @@
     box-sizing: border-box;
 
     cursor: pointer;
+}
+
+.marker:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tooltip {
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.2s opacity;
+
+    position: relative;
+
+    left: -110px;
+    top: 30px;
+
+    width: 250px;
+
+    font-size: 12px;
+    border-radius: 3px;
+    border: 1px solid #aaa;
+    box-sizing: border-box;
+    
+    background-color: #444;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+}
+
+.tooltip h1 {
+    font-size: 14px;
 }
