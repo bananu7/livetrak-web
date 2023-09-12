@@ -16,9 +16,11 @@ export function Timeline(props: TimelineProps) {
         return (<Marker time={m} key={i++} onClick={click} projectLength={ props.projectLength } />);
     });
     return(
-        <div className="timeline">
-            {markers}
-            <Scrubber projectTime={ props.projectTime } projectLength={ props.projectLength }/>
+        <div className="timelineWrapper">
+            <div className="timeline">
+                {markers}
+                <Scrubber projectTime={ props.projectTime } projectLength={ props.projectLength }/>
+            </div>
         </div>
     );
 }
