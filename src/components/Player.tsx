@@ -59,7 +59,7 @@ export function Player(props: PlayerProps) {
         requestAnimationFrame(updatePlaybackPosition);
     }, [props.audioSystem]);
 
-    const setup = async () => {
+    const setup = useCallback(async () => {
         const trackListInFolder = await getJsonFile(props.token, props.folder, 'tracks.json');
         const zoomProjectData = await getZoomProjectData(props.token, props.folder);
         setMarkers(zoomProjectData.markers.map(zoomMarkerToTime));
@@ -73,13 +73,13 @@ export function Player(props: PlayerProps) {
         setTracks(trackListWithAuth);
 
         updatePlaybackPosition();
-    }
+    }, [props.token, props.folder, updatePlaybackPosition]);
 
     useEffect(() => {
         setup();
 
         return () => { };
-    }, [props.folder, props.token, props.audioSystem]);
+    }, [props.folder, props.token, props.audioSystem, setup]);
 
     if (!tracks) {
         return <span>Loading tracks...</span>;
