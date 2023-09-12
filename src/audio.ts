@@ -11,11 +11,14 @@ export type AudioState = {
     velocity: number,
 }
 
+export const midFrequencies = [100, 140, 200, 250, 315, 500, 800, 1000, 1300, 2000, 3000, 5000, 8000] as const;
+export type EqMidFrequency = typeof midFrequencies[number];
+
 export type EqController = {
     setLowCutEnabled: (lowCut: boolean) => void;
     setLowGain: (lowGain: number) => void;
     setMidGain: (midGain: number) => void;
-    // setMidFrequency: (freq: number) => void
+    setMidFrequency: (freq: EqMidFrequency) => void
     setHighGain: (highGain: number) => void;
     setPan: (pan: number) => void;
 }
@@ -186,13 +189,13 @@ export class AudioSystem {
 
         const mid = this.audioContext.createBiquadFilter();
         mid.type = 'peaking';
+        mid.frequency.value = 1000;
         mid.gain.value = 0;
 
         const high = this.audioContext.createBiquadFilter();
         high.type = 'highshelf';
         high.frequency.value = 10000;
         high.gain.value = 0;
-
 
         const panNode = this.audioContext.createStereoPanner();
 
@@ -207,7 +210,7 @@ export class AudioSystem {
             setLowCutEnabled: e => lowCut.frequency.value = e ? 75 : 0,
             setLowGain: g => low.gain.value = g,
             setMidGain: g => mid.gain.value = g,
-            // setMidFrequency: (freq: number) => void
+            setMidFrequency: (freq: EqMidFrequency) => mid.frequency.value = freq,
             setHighGain: g => high.gain.value = g,
             setPan: p => panNode.pan.value = p,
         };
