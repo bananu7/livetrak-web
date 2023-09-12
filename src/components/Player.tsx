@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useLayoutEffect } from 'react'
 import { AudioChannel } from './AudioChannel.tsx'
 import { MasterChannel } from './MasterChannel.tsx'
 import { FxChannel } from './FxChannel.tsx'
@@ -45,19 +45,8 @@ async function getZoomProjectData(token: string, folder: string): Promise<ZoomPr
 
 export function Player(props: PlayerProps) {
     const [tracks, setTracks] = useState<TrackMeta[]|null>(null);
+    const [displayedProjectTime, setDisplayedProjectTime] = useState<ProjectTimeSeconds>(0);
     const [markers, setMarkers] = useState<ProjectTimeSeconds[]>([]);
-
-    const updatePlaybackPosition = useCallback(() => {
-        const playbackPos = document.getElementById('playbackPosition');
-        if (!playbackPos) {
-            requestAnimationFrame(updatePlaybackPosition);
-            return;
-        }
-
-        const { position } = props.audioSystem.query();
-        playbackPos.innerText = floatToTimestring(position);
-        requestAnimationFrame(updatePlaybackPosition);
-    }, [props.audioSystem]);
 
     const setup = useCallback(async () => {
         const trackListInFolder = await getJsonFile(props.token, props.folder, 'tracks.json');
@@ -72,14 +61,22 @@ export function Player(props: PlayerProps) {
         });
         setTracks(trackListWithAuth);
 
-        updatePlaybackPosition();
-    }, [props.token, props.folder, updatePlaybackPosition]);
+    }, [props.token, props.folder]);
 
     useEffect(() => {
         setup();
 
         return () => { };
     }, [props.folder, props.token, props.audioSystem, setup]);
+
+    // TODO - useRafLoop
+    useLayoutEffect(() => {
+        const i = setInterval(() => {
+            const { position } = props.audioSystem.query();
+            setDisplayedProjectTime(position);
+        }, 100);
+        return () => clearInterval(i);
+    }, [props.audioSystem]);
 
     if (!tracks) {
         return <span>Loading tracks...</span>;
@@ -105,14 +102,21 @@ export function Player(props: PlayerProps) {
                     <div className="screen">
                         <span className="inverted">{props.folder}</span>
                         <br />
-                        <span id="playbackPosition"></span>
+                        <span id="playbackPosition">{floatToTimestring(displayedProjectTime)}</span>
                     </div>
                     <Transport audioSystem={props.audioSystem} />
+                    <div className="markerList">
+                        <ul>
+                            {markers.map(m => <li key={m}><div className="dot"/>{m}</li>)}
+                        </ul>
+                    </div>
                 </div>
             </div>
 
             <Timeline
                 markers={markers}
+                projectTime={displayedProjectTime}
+                projectLength={2 * 60 * 60}
                 setProjectTime={(t) => props.audioSystem.update({ position: t})}
             />
         </div>

@@ -4,6 +4,8 @@ import './Timeline.css'
 
 export type TimelineProps = {
     markers: ProjectTimeSeconds[],
+    readonly projectTime: ProjectTimeSeconds,
+    readonly projectLength: ProjectTimeSeconds,
     setProjectTime: (time: ProjectTimeSeconds) => void,
 }
 
@@ -11,41 +13,46 @@ export function Timeline(props: TimelineProps) {
     let i = 0;
     const markers = props.markers.map(m => {
         const click = () => props.setProjectTime(m);
-        return (<Marker time={m} key={i++} onClick={click} />);
+        return (<Marker time={m} key={i++} onClick={click} projectLength={ props.projectLength } />);
     });
-    return(<div className="timeline">
-        {markers}
-        <Scrubber />
-    </div>);
+    return(
+        <div className="timeline">
+            {markers}
+            <Scrubber projectTime={ props.projectTime } projectLength={ props.projectLength }/>
+        </div>
+    );
 }
 
-export function Scrubber() {
-    const projectLength = 7200; // TODO hardcoded to 2h for now
+export type ScrubberProps = {
+    readonly projectTime: ProjectTimeSeconds,
+    readonly projectLength: ProjectTimeSeconds,
+}
+
+export function Scrubber(props: ScrubberProps) {
+    const projectPercent = props.projectTime / props.projectLength * 100;
     const style: CSSProperties = {
-        left: 120 / projectLength * 100 + '%',
+        left: `calc(${projectPercent}% - 20px)`,
     };
 
-    return (
-        <div className="scrubber" style={style} >
-        </div>
-    )
+    return (<div className="scrubber" style={style} />);
 }
 
 export type MarkerProps = {
     time: ProjectTimeSeconds,
     onClick: MouseEventHandler<HTMLDivElement>,
+    readonly projectLength: ProjectTimeSeconds,
 }
 
 export function Marker(props: MarkerProps) {
-    const projectLength = 7200; // TODO hardcoded to 2h for now
+    const projectPercent = props.time / props.projectLength * 100;
     const style: CSSProperties = {
-        left: props.time / projectLength * 100 + '%', 
+        left: `calc(${projectPercent}% - 15px)`,
     };
 
     return (
         <div className="marker" style={style} onClick={props.onClick}>
             <svg width={30} height={35}>
-                <path d="M 5 5 H 25 V 20 L 15 30 L 5 20 Z" fill="#4ec144" stroke="#276122" stroke-width="3"/>
+                <path d="M 5 5 H 25 V 20 L 15 30 L 5 20 Z" fill="#4ec144" stroke="#276122" strokeWidth="3"/>
             </svg>
             <MarkerTooltip name="Zoom Marker" time={props.time}>
             This marker has been imported from the PRJDATA.ZDT file and can't be edited.
