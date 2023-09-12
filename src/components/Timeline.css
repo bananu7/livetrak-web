@@ -12,13 +12,9 @@
     position: absolute;
     width: 30px;
     height: 30px;
-    
-    top: calc(50% - 15px);
 
-    border-radius: 15px;
+    top: 10px;
 
-    background-color: #4ec144;
-    border: 3px solid #276122;
     box-sizing: border-box;
 
     cursor: pointer;
@@ -45,7 +41,7 @@
     border-radius: 3px;
     border: 1px solid #aaa;
     box-sizing: border-box;
-    
+
     background-color: #444;
     box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
 }

@@ -31,6 +31,9 @@ export function Marker(props: MarkerProps) {
 
     return (
         <div className="marker" style={style} onClick={props.onClick}>
+            <svg width={30} height={35}>
+                <path d="M 5 5 H 20 V 20 L 10 30 L 5 20 Z" fill="lime" stroke="#276122" stroke-width="3"/>
+            </svg>
             <MarkerTooltip name="Zoom Marker" time={props.time}>
             This marker has been imported from the PRJDATA.ZDT file and can't be edited.
             </MarkerTooltip>
