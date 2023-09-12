@@ -36,7 +36,22 @@ export function Scrubber(props: ScrubberProps) {
         left: `calc(${projectPercent}% - 20px)`,
     };
 
-    return (<div className="scrubber" style={style} />);
+    /*
+    <svg height={120} width={100} style={{width: '100%', height: '100%'}}>
+        <path d="M 0 60 H 200" stroke="#4ec144" strokeWidth="5"/>
+    </svg>
+    */
+
+    const lineStyle : CSSProperties = {
+        width: `${projectPercent}%`
+    };
+
+    return (
+        <>
+            <div className="scrubberLine" style={lineStyle} />
+            <div className="scrubber" style={style} />
+        </>
+    );
 }
 
 export type MarkerProps = {

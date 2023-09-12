@@ -28,7 +28,20 @@
     box-sizing: border-box;
     border: 2px solid #aaa;
 
-    background: linear-gradient(90deg, #111 47%, #00d4ff 47%, #00d4ff 53%, #111 53%);
+    background: linear-gradient(90deg, #111 47%, #4ec144 47%, #4ec144 53%, #111 53%);
+
+    transition: 0.2s left;
+}
+
+.timeline .scrubberLine {
+    position: absolute;
+    top: calc(50% - 3px);
+    left: 0;
+    height: 6px;
+
+    background-color: #4ec144;
+
+    transition: 0.2s width;
 }
 
 .timeline .marker {
@@ -56,7 +69,7 @@
     position: relative;
 
     left: -110px;
-    top: 30px;
+    top: 35px;
 
     width: 250px;
 
@@ -67,6 +80,8 @@
 
     background-color: #444;
     box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+
+    z-index: 2;
 }
 
 .tooltip h1 {
