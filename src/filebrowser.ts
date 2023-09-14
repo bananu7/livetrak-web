@@ -83,6 +83,8 @@ export async function getFile(token: string, path: string, name: string): Promis
 export async function getJsonFile(token: string, path: string, name: string): Promise<any|null> {
     try {
         const response = await getFile(token, path, name);
+        if (!response)
+            return null;
         const json = await response.json();
         return json;
     } catch (error) {
