@@ -1,4 +1,4 @@
-ul {
+ul.folderList {
     min-width: 600px;
 
     display: flex;
@@ -11,7 +11,7 @@ ul {
     border-radius: 3px;
 }
 
-li {
+.folderList li {
     color: rgba(255, 255, 255, 0.87);
     list-style-type: none;
     background-color: #1A67AB;
@@ -26,7 +26,7 @@ li {
     box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.3);
 }
 
-li:hover {
+.folderList li:hover {
     border: 1px solid #76a4cd;
     box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
 }
