@@ -92,7 +92,7 @@ export function Player(props: PlayerProps) {
 
     return (
         <div className="player">
-            <div style={{display:'flex'}}>
+            <div style={{display:'flex', height: "780px"}}>
                 <div className="channels">
                     {channels}
                     <FxChannel controller={fxChannelController} />
