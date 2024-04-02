@@ -7,7 +7,8 @@ import { Timeline } from './Timeline.tsx'
 
 import { AudioSystem } from '../audio'
 import { makeUrl, getJsonFile, getFile } from '../filebrowser'
-import { floatToTimestring, formatProjectTime } from '../util'
+import { floatToTimestring } from '../util'
+import { formatProjectTime } from '../zoom/formatProjectTime'
 
 import './Player.css'
 

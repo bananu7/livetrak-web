@@ -1,6 +1,6 @@
 import { CSSProperties, MouseEventHandler, PropsWithChildren } from 'react';
 import { ProjectTimeSeconds } from '../zoom/zoom_l12';
-import { formatProjectTime } from '../util';
+import { formatProjectTime } from '../zoom/formatProjectTime'
 import './Timeline.css'
 
 export type TimelineProps = {
