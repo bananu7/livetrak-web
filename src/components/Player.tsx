@@ -90,7 +90,7 @@ export function Player(props: PlayerProps) {
     const masterChannelController = props.audioSystem.getMasterChannelController();
     const fxChannelController = props.audioSystem.getFxChannelController();
 
-    const setProjectTime = (t) => props.audioSystem.update({ position: t});
+    const setProjectTime = (t: ProjectTimeSeconds) => props.audioSystem.update({ position: t});
 
     return (
         <div className="player">

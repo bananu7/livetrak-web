@@ -1,6 +1,6 @@
 import { ProjectTimeSeconds } from './zoom_l12'
 
-function padWithZero(n) {
+function padWithZero(n: number): string {
     if (n < 10) {
         return `0${n}`;
     } else {
