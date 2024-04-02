@@ -90,6 +90,8 @@ export function Player(props: PlayerProps) {
     const masterChannelController = props.audioSystem.getMasterChannelController();
     const fxChannelController = props.audioSystem.getFxChannelController();
 
+    const setProjectTime = (t) => props.audioSystem.update({ position: t});
+
     return (
         <div className="player">
             <div style={{display:'flex', height: "780px"}}>
@@ -108,7 +110,11 @@ export function Player(props: PlayerProps) {
                     <Transport audioSystem={props.audioSystem} />
                     <div className="markerList" style={{flexGrow: 1}}>
                         <ul>
-                            {markers.map(m => <li key={m}><div className="dot"/>{formatProjectTime(m)}</li>)}
+                            {markers.map(m =>
+                                <li key={m} onClick={() => setProjectTime(m)}>
+                                    <div className="dot"/>{formatProjectTime(m)}
+                                </li>
+                            )}
                         </ul>
                     </div>
                 </div>
@@ -118,7 +124,7 @@ export function Player(props: PlayerProps) {
                 markers={markers}
                 projectTime={displayedProjectTime}
                 projectLength={2 * 60 * 60}
-                setProjectTime={(t) => props.audioSystem.update({ position: t})}
+                setProjectTime={setProjectTime}
             />
         </div>
     );

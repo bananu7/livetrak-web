@@ -68,6 +68,7 @@
     justify-items: center;
     align-items: center;
 
+    cursor: pointer;
     height: 40px;
     list-style-type: none;
     border-radius: 3px;
