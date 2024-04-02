@@ -7,7 +7,7 @@ import { Timeline } from './Timeline.tsx'
 
 import { AudioSystem } from '../audio'
 import { makeUrl, getJsonFile, getFile } from '../filebrowser'
-import { floatToTimestring } from '../util'
+import { floatToTimestring, formatProjectTime } from '../util'
 
 import './Player.css'
 
@@ -105,9 +105,9 @@ export function Player(props: PlayerProps) {
                         <span id="playbackPosition">{floatToTimestring(displayedProjectTime)}</span>
                     </div>
                     <Transport audioSystem={props.audioSystem} />
-                    <div className="markerList">
+                    <div className="markerList" style={{flexGrow: 1}}>
                         <ul>
-                            {markers.map(m => <li key={m}><div className="dot"/>{m}</li>)}
+                            {markers.map(m => <li key={m}><div className="dot"/>{formatProjectTime(m)}</li>)}
                         </ul>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 import { CSSProperties, MouseEventHandler, PropsWithChildren } from 'react';
 import { ProjectTimeSeconds } from '../zoom/zoom_l12';
+import { formatProjectTime } from '../util';
 import './Timeline.css'
 
 export type TimelineProps = {
@@ -81,14 +82,6 @@ export function Marker(props: MarkerProps) {
 export type MarkerTooltipProps = {
     name: string,
     time: ProjectTimeSeconds,
-}
-
-function formatProjectTime(time: ProjectTimeSeconds) {
-    const hours = Math.floor(time / 3600);
-    time -= hours * 3600;
-    const minutes = Math.floor(time / 60);
-    time -= minutes * 60;
-    return `${hours}:${minutes}:${Math.floor(time)}`;
 }
 
 export function MarkerTooltip(props: PropsWithChildren<MarkerTooltipProps>) {
