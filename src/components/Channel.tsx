@@ -4,6 +4,7 @@ import { ChannelController } from '../audio'
 import { Fader } from './Fader'
 import { MuteButton } from './MuteButton'
 import { Meter } from './Meter'
+import { dbToGain, faderPosToDb } from '../audio/util'
 import './Channel.css'
 
 export type AudioStatus = "ok" | "warning" | "error";
@@ -16,7 +17,7 @@ export type ChannelProps = {
 
 export function Channel(props: ChannelProps) {
     const [muted, setMuted] = useState(false);
-    const [volume, setVolumeState] = useState(100);
+    const [volume, setVolumeState] = useState(80);
 
     const muteClick = useCallback(() => {
         setMuted(m => {
@@ -27,7 +28,12 @@ export function Channel(props: ChannelProps) {
 
     const setVolume = useCallback((vol: number) => {
         setVolumeState(vol);
-        props.controller.setGain(vol / 100);
+
+        const db = faderPosToDb(vol);
+        const gain = dbToGain(db);
+        console.log(`Setting gain for ${props.name} to ${gain}, dB = ${db}, pos=${vol}`)
+
+        props.controller.setGain(gain);
     }, [props.controller]);
 
     const statusClass = {'ok':'toggledGreen', 'warning':'toggledYellow', 'error':'toggledRed'}[props.status];
