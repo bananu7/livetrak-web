@@ -20,3 +20,6 @@ jobs:
 
     - name: Run TypeScript
       run: npx tsc
+
+    - name: Run tests
+      run: npm run test
