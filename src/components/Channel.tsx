@@ -31,7 +31,6 @@ export function Channel(props: ChannelProps) {
 
         const db = faderPosToDb(vol);
         const gain = dbToGain(db);
-        console.log(`Setting gain for ${props.name} to ${gain}, dB = ${db}, pos=${vol}`)
 
         props.controller.setGain(gain);
     }, [props.controller]);
