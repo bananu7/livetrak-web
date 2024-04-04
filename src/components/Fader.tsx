@@ -1,4 +1,5 @@
 import { useCallback, ChangeEvent, WheelEvent } from 'react'
+import './Fader.css'
 
 export type FaderProps = {
     value: number,
