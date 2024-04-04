@@ -3,6 +3,7 @@ import { Fader } from './Fader'
 import { MuteButton } from './MuteButton'
 import { Meter } from './Meter'
 import { SimpleChannelController } from '../audio'
+import { dbToGain, faderPosToDb } from '../audio/util'
 
 export type FxChannelProps = {
     controller: SimpleChannelController,
@@ -10,7 +11,7 @@ export type FxChannelProps = {
 
 export function FxChannel(props: FxChannelProps) {
     const [muted, setMuted] = useState(false);
-    const [volume, setVolumeState] = useState(100);
+    const [volume, setVolumeState] = useState(80);
     const muteClick = useCallback(() => {
         setMuted(m => {
             props.controller.setMute(!m);
@@ -19,7 +20,11 @@ export function FxChannel(props: FxChannelProps) {
     }, [props.controller.setMute]);
     const setVolume = useCallback((vol: number) => {
         setVolumeState(vol);
-        props.controller.setGain(vol / 100);
+
+        const db = faderPosToDb(vol);
+        const gain = dbToGain(db);
+
+        props.controller.setGain(gain);
     }, [props.controller]);
 
     const name = "FX";
