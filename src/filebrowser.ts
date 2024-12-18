@@ -1,4 +1,4 @@
-const FILEBROWSER_URL_ROOT = 'https://filebrowser.banachewicz.pl/';
+const FILEBROWSER_URL_ROOT = 'https://filebrowser.nova.banachewicz.pl/';
 
 // Function to get the access token from the FileBrowser server
 export async function getToken(): Promise<string> {
