@@ -1,0 +1,9 @@
+services:
+  filebrowser:
+    ports:
+      - "8080:8080"
+    image: "filebrowser/filebrowser"
+    volumes:
+      - ./config:/config
+      - ./db:/database
+      - ./data:/data
