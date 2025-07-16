@@ -51,8 +51,13 @@ export function Player(props: PlayerProps) {
 
     const setup = useCallback(async () => {
         const trackListInFolder = await getJsonFile(props.token, props.folder, 'tracks.json');
-        const zoomProjectData = await getZoomProjectData(props.token, props.folder);
-        setMarkers(zoomProjectData.markers.map(zoomMarkerToTime));
+
+        try {
+          const zoomProjectData = await getZoomProjectData(props.token, props.folder);
+          setMarkers(zoomProjectData.markers.map(zoomMarkerToTime));
+        } catch {
+          console.error("Failed to obtain Zoom project metadata");
+        }
 
         // no tracklist on the server, use default one
         const trackList = trackListInFolder ?? DEFAULT_TRACK_LIST;
