@@ -12,8 +12,8 @@ export type AudioProps = {
 
 export function AudioChannel(props: AudioProps) {
     const [status, setStatus] = useState<AudioStatus>('warning');
-    const audioRef = useRef<HTMLAudioElement>();
-    const deleterRef = useRef<() => void>();
+    const audioRef = useRef<HTMLAudioElement>(null);
+    const deleterRef = useRef<() => void>(null);
     const [controller, setController] = useState<ChannelController|null>(null);
 
     const audioCreated = useCallback((htmlElement: HTMLAudioElement) => {
