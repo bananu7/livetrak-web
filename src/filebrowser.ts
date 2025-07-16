@@ -1,19 +1,21 @@
-const FILEBROWSER_URL_ROOT = 'https://filebrowser.nova.banachewicz.pl/';
+const urlRoot = import.meta.env.VITE_FILEBROWSER_URL_ROOT;
+const username = import.meta.env.VITE_FILEBROWSER_USERNAME;
+const password = import.meta.env.VITE_FILEBROWSER_PASSWORD;
 
 // Function to get the access token from the FileBrowser server
 export async function getToken(): Promise<string> {
     console.log('Requesting access token...');
 
     try {
-        const url = `${FILEBROWSER_URL_ROOT}api/login`;
+        const url = `${urlRoot}api/login`;
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
             },
             body: JSON.stringify({
-                username: 'baitreader',
-                password: 'baitreader',
+                username,
+                password,
                 recaptcha: ""
             })
         });
@@ -25,7 +27,7 @@ export async function getToken(): Promise<string> {
 }
 
 export function makeUrl(folder: string, name: string, token: string) {
-    const path = `${FILEBROWSER_URL_ROOT}api/raw/${folder}/`;
+    const path = `${urlRoot}api/raw/${folder}/`;
     const auth = `auth=${token}`;
     const inline = 'inline=true';
 
@@ -46,7 +48,7 @@ export type File = {
 
 export async function getDirectoryContents(token: string): Promise<File[]> {
     try {
-        const url = `${FILEBROWSER_URL_ROOT}api/resources/?auth=${token}`;
+        const url = `${urlRoot}api/resources/?auth=${token}`;
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -63,7 +65,7 @@ export async function getDirectoryContents(token: string): Promise<File[]> {
 
 export async function getFile(token: string, path: string, name: string): Promise<any|null> {
     try {
-        const url = `${FILEBROWSER_URL_ROOT}api/raw/${path}/${name}?auth=${token}`;
+        const url = `${urlRoot}api/raw/${path}/${name}?auth=${token}`;
         const response = await fetch(url, {
             method: 'GET',
         });
